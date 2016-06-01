@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+	<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="themes/default/css/pdf.css">
+	</head>
+	<body>
+	<div id = "FrmPDF">
+		<div id="innerFrame">
+		<form method="post" class="contact-us" action="pdfgenerator.php">
+					<h3 id="titrePDF"> Information du bénéficiaire de la réservation :</h3>
+					<br />Civilité
+					<select id="civ" name="civ" class="form-control">
+							<option> Mr </option>
+							<option> Mme </option>
+					</select>
+					<br />Nom
+					<div class="input-group">
+						<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+						<input class="form-control" placeholder="Nom du bénéficiaire" name="nom" type="text" required >
+					</div>
+					<br />Prénom
+					<div class="input-group">
+						<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+						<input class="form-control" placeholder="Prénom du bénéficiaire" name="prenom" type="text" required>
+					</div>
+					<br />Adresse
+					<div class="input-group">
+						<span class="input-group-addon"><span class="glyphicon glyphicon-home"></span></span>
+						<input  class="form-control" placeholder="Adresse du bénéficiaire" type="text" name="adresse" required>
+					</div>
+					<br />Ville
+					<div class="input-group">
+						<span class="input-group-addon"><span class="glyphicon glyphicon-pencil"></span></span>
+						<input class="form-control" placeholder="Ville du bénéficiaire" name="ville" type="text" required>
+					</div>
+						
+					<input type="hidden" class="form-control" placeholder="period" name="period" type="text" value="<?php echo $period; ?>" >
+					<input type="hidden" class="form-control" placeholder="Organisme" name="orga" type="text" value="<?php echo $row[10]; ?>" >
+					<input type="hidden" class="form-control" placeholder="Etablissement" name="etat" type="text" value="<?php echo Settings::get("company"); ?>" >
+					<input type="hidden" class="form-control" placeholder="Date de la demande" name="date" type="text" value="<?php echo utf8_encode(strftime('%A %d %B %Y' ,strtotime($row[6]))); ?>" required>
+					<input type="hidden" class="form-control" placeholder="Salle" name="salle" type="text" value="<?php echo $row2[0]; ?>" required>
+					<input type="hidden" class="form-control" placeholder="jour" name="jour" type="text" value="<?php echo utf8_encode(strftime('%A %d %B %Y' ,$row[1])); ?>" required>
+					<input type="hidden" class="form-control" placeholder="Heure de début" name="heure" type="text" value="<?php echo strftime('%H:%M' ,$row[1]); ?>" required>
+					<input type="hidden" class="form-control" placeholder="finPeriode" name="finPeriode" type="text" value="<?php echo $rep_end_date; ?>" required>
+					<input type="hidden" class="form-control" placeholder="jourPeriode" name="jourPeriode" type="text" value="<?php echo utf8_encode(strftime('%A' ,$row6[1])); ?>" required>
+					<input type="hidden" class="form-control" placeholder="Heure de fin" name="heure2" type="text" value="<?php echo strftime('%H:%M' , $row[2]); ?>" required>
+					<input type="hidden" class="form-control" placeholder="Logo" name="logo" type="text" value="images/<?php echo Settings::get("logo"); ?>" required>
+					<input type="hidden" class="form-control" placeholder="jour2" name="jour2" type="text" value="<?php echo utf8_encode(strftime('%A %d %B %Y' ,$row[2])); ?>" required>
+					<br />
+					<div id="validPDF" class="control-group">
+						<div class="controls">
+							<button type="submit" value="ok" class="btn btn-primary" >Générer le pdf</button>
+						</div>
+					</div>
+			</form>
+			</div>
+		</div>
+	</body>
+	</html>

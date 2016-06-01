@@ -1,0 +1,24 @@
+.content{width:100%;margin:auto 0!important}
+.preview-pane{border:3px solid #ccc}
+body{background-color:#fff}
+#img{float:right;top:20%}
+#signature{float:right}
+img#logoPDF{
+	width : 100px;
+	float : right;
+}
+
+div#FrmPDF{
+	background-color:#f9f9f9;
+	border-style: solid;
+	border-width: 1px;
+	margin: 10px;
+}
+
+div#innerFrame{
+	background-color:#ffffff;
+	margin : 20px;
+}
+h3#titrePDF, div#validPDF{
+	text-align: center;
+}
