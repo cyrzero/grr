@@ -1,4 +1,4 @@
-body{font-size:14px;font-family:arial,verdana,sans-serif;background-color:#17346C;width:100%;margin:0 auto}
+body{font-size:14px;font-family:arial,verdana,sans-serif;background-color:#17346C;width:100%;margin:auto}
 a:after{content:"" !important}
 .ferie{background-color:#c0392b !important}
 .vacance{background-color:rgba(46,204,113,.5) !important}
@@ -68,7 +68,7 @@ b,strong{color:#000;text-align:center}
 table.legende{margin-left:25px;width:250px}
 table.legende td{width:125px;text-align:center}
 .pied_menuGauche{border-top:3px solid #17346C}
-th{color:#eee;font-size:10pt;font-family:verdana,sans-serif;background-color:#17346C !important;vertical-align:top;text-align:center !important;border:none !important}
+th{color:#eee;font-size:10px;font-family:verdana,sans-serif;background-color:#17346C !important;vertical-align:top;text-align:center !important;border:none !important}
 td.cell_hours{color:#fff;background-color:gray !important;text-align:center;font-size:13px;height:20px;line-height:20px;border: none !important}
 td.cell_hours2{color:#000;background-color:#ccc !important;text-align:center;font-size:13px;height:20px;line-height:20px;border: none !important}
 td.cell_hours a{color:#fff}
@@ -92,7 +92,7 @@ td.calendarHeader2{text-align:center;border:0;font-size:10pt;width:200px;backgro
 td.colgauche_admin{width:25%}
 div.tooltip{color:#000;background:#ffb200;margin:5px;padding:5px}
 #planning{position:relative;background-color:#17346C;height:100%;width:auto}
-#print_planning{position:relative;background-color:#17346C;height:100%;width:auto}
+#print_planning{position:relative;background-color:#17346C;height:100%;width:auto;}
 #planningMonthAll2{margin-left:0}
 .titre_planning{position:relative;background-color:#17346C;height:100%;color:#000;text-align:center;font-size:1.2em}
 .titre_planning table{border:0}

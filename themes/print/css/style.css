@@ -1,9 +1,11 @@
 body {
 	background-color:#FFFFFF;
 	font-size: 12px;
+	
 }
 
 .print_image {
+	
     /* visibility: hidden; */
 }
 
@@ -15,16 +17,21 @@ a:after {content: "" !important;}
 
 tr{
 height : 20px!important;
+
 }
-
-
-td.cell_hours{
-white-space:nowrap;
-line-height:15px;
-}
-
-
 
 .cell_hours td {
-height: 10px;
+height: auto;
+
+}
+.cell_month td{
+table-layout:fixed;
+white-space:pre;
+width:100%;
+height:100%;
+font-size:12px;
+transform: scale(1.0);
+}
+thead{
+position:relative;
 }
