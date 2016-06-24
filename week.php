@@ -134,11 +134,13 @@ if ($_GET['pview'] != 1){
 	echo '<div id="planning">'.PHP_EOL;
 	
 }else{
-	echo '<div id="print_planning">'.PHP_EOL;}
-	//appel fonction impression
+	echo '<div id="print_planning" >'.PHP_EOL;}
+		//appel fonction impression
 		echo '<script type="text/javascript">$(document).ready(function(){
-			printPage('.Settings::get("grr_print_auto").');
-		}); </script>'.PHP_EOL;
+ 			printPage('.Settings::get("grr_print_auto").');
+			}); </script>'.PHP_EOL;
+	echo '<div class="row">'.PHP_EOL;
+	
 include "chargement.php";
 echo '<div class="titre_planning_week">'.PHP_EOL;
 if (($this_room_name_des) && ($this_room_name_des != "-1"))
@@ -169,7 +171,7 @@ if (verif_display_fiche_ressource(getUserName(), $room) && $_GET['pview'] != 1)
 }
 if (authGetUserLevel(getUserName(),$room) > 2 && $_GET['pview'] != 1)
 {
-	echo "<a href='./admin/admin_edit_room.php?room=$room'><span class='glyphcolor glyphalign glyphicon glyphicon-cog\'></span></a>",PHP_EOL;
+	echo "<a href='admin_edit_room.php?room=$room'><span class='glyphcolor glyphalign glyphicon glyphicon-cog\'></span></a>",PHP_EOL;
 }
 affiche_ressource_empruntee($room);
 if ($this_statut_room == "0" && $_GET['pview'] != 1)

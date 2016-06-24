@@ -144,9 +144,9 @@ else
 	}else{
 		echo '<div id="print_planning">'.PHP_EOL;}
 		//appel fonction impression
-		echo '<script type="text/javascript">$(document).ready(function(){
-			printPage('.Settings::get("grr_print_auto").');
-		}); </script>'.PHP_EOL;
+ 		echo '<script type="text/javascript">$(document).ready(function(){
+ 			printPage('.Settings::get("grr_print_auto").');
+			}); </script>'.PHP_EOL;
 	echo '<div class="titre_planning">'.PHP_EOL.'<table class="table-header">'.PHP_EOL;
 	//Test si le format est imprimable
 	if ((!isset($_GET['pview'])) || ($_GET['pview'] != 1))

@@ -34,7 +34,7 @@ include "include/functions.inc.php";
 include "include/$dbsys.inc.php";
 include "include/mincals.inc.php";
 include "include/mrbs_sql.inc.php";
-$grr_script_name = "month.php";
+$grr_script_name = "month_all.php";
 require_once("./include/settings.class.php");
 if (!Settings::load())
 	die("Erreur chargement settings");
@@ -154,9 +154,9 @@ if ($_GET['pview'] != 1){
 else{
 	echo '<div id="print_planning">'.PHP_EOL;}
 	//appel fonction impression
-		echo '<script type="text/javascript">$(document).ready(function(){
-			printPage('.Settings::get("grr_print_auto").');
-		}); </script>'.PHP_EOL;
+ 		echo '<script type="text/javascript">$(document).ready(function(){
+ 			printPage('.Settings::get("grr_print_auto").');
+ 		}); </script>'.PHP_EOL;
 echo '<div class="titre_planning">'.PHP_EOL;
 echo '<table class="table-header">'.PHP_EOL;
 if ((!isset($_GET['pview'])) || ($_GET['pview'] != 1))
@@ -178,7 +178,7 @@ echo '<h4 class="titre"> '. ucfirst($this_area_name).' - '.$this_room_name.' '.$
 if (verif_display_fiche_ressource(getUserName(), $room) && $_GET['pview'] != 1)
 	echo '<a href="javascript:centrerpopup(\'view_room.php?id_room=',$room,'\',600,480,\'scrollbars=yes,statusbar=no,resizable=yes\')" title="',get_vocab("fiche_ressource"),'"><span class="glyphcolor glyphicon glyphicon-search"></span></a>';
 if (authGetUserLevel(getUserName(),$room) > 2 && $_GET['pview'] != 1)
-	echo "<a href='./admin/admin_edit_room.php?room=$room'><span class=\"glyphcolor glyphicon glyphicon-cog\"></span></a>";
+	echo "<a href='admin_edit_room.php?room=$room'><span class=\"glyphcolor glyphicon glyphicon-cog\"></span></a>";
 affiche_ressource_empruntee($room);
 if ($this_statut_room == "0")
 	echo '<br><span class="texte_ress_tempo_indispo">',get_vocab("ressource_temporairement_indisponible"),'</span>';

@@ -285,8 +285,8 @@ else
 		echo '<div id="print_planning" >'.PHP_EOL;}
 		//appel fonction impression
 		echo '<script type="text/javascript">$(document).ready(function(){
-			printPage('.Settings::get("grr_print_auto").');
-		}); </script>'.PHP_EOL;
+ 			printPage('.Settings::get("grr_print_auto").');
+			}); </script>'.PHP_EOL;
 	echo '<div class="row">'.PHP_EOL;
 	include "chargement.php";
 	echo '<div class="titre_planning">'.PHP_EOL;
@@ -398,7 +398,7 @@ else
 				echo '<span class="glyphcolor glyphicon glyphicon-search"></span></a>'.PHP_EOL;
 			}
 			if (authGetUserLevel(getUserName(),$row['2']) > 2 && $_GET['pview'] != 1)
-				echo '<a href="./admin/admin_edit_room.php?room='.$row['2'].'"><span class="glyphcolor glyphicon glyphicon-cog"></span></a>'.PHP_EOL;
+				echo '<a href="admin_edit_room.php?room='.$row['2'].'"><span class="glyphcolor glyphicon glyphicon-cog"></span></a>'.PHP_EOL;
 			affiche_ressource_empruntee($row['2']);
 			echo '</td>'.PHP_EOL;
 			$li++;
@@ -569,12 +569,12 @@ else
 	}
 }
 echo '</table>'.PHP_EOL;
-//if ($_GET['pview'] != 1)
-//{
+if ($_GET['pview'] != 1)
+{
 	echo '<div id="toTop">',PHP_EOL,'<b>',get_vocab("top_of_page"),'</b>',PHP_EOL;
 	bouton_retour_haut ();
 	echo '</div>',PHP_EOL;
-//}
+}
 echo '</div>'.PHP_EOL;
 echo '</div>'.PHP_EOL;
 echo '</div>'.PHP_EOL;

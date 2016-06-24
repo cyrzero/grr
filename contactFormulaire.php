@@ -1,5 +1,5 @@
+
 <?php
-include "rafraichissement.php";
 include "include/connect.inc.php";
 include "include/config.inc.php";
 include "include/misc.inc.php";
@@ -24,39 +24,39 @@ include "include/language.inc.php";
 	bouton_retour_haut();
 	bouton_aller_bas();
 ?>
-<script>
-	function remplirdureemin(res)
-	{ 
-	  
-		frmContact.dureemin.options.length = 0;
-		frmContact.debdureemin.options.length = 0;
-		resmin = res/60;
-		nbiteration = 60/resmin;
-		
-		var y= document.getElementById("debdureemin");
-		var x = document.getElementById("dureemin");
-		valeur = 0;
-		
-		for (i=0;i<nbiteration;i++){
-			frmContact.dureemin.options[i] = document.createElement("option");
-			frmContact.debdureemin.options[i] = document.createElement("option");
+	<script>
+		function remplirdureemin(res)
+		  { 
+		  
+			frmContact.dureemin.options.length = 0;
+			frmContact.debdureemin.options.length = 0;
+			resmin = res/60;
+			nbiteration = 60/resmin;
 			
-			if(i==0){
-				valeur = 00;
-			}else{
-				valeur = valeur + resmin;
-			}
-			frmContact.dureemin.options[i].text = valeur +" min";
-			frmContact.dureemin.options[i].value = valeur;
-			x.add(frmContact.dureemin.options[i]);
-		
-			frmContact.debdureemin.options[i].text = valeur +" min";
-			frmContact.debdureemin.options[i].value = valeur;
-			y.add(frmContact.debdureemin.options[i]);
+			var y= document.getElementById("debdureemin");
+			var x = document.getElementById("dureemin");
+			valeur = 0;
+			
+			for (i=0;i<nbiteration;i++){
+				frmContact.dureemin.options[i] = document.createElement("option");
+				frmContact.debdureemin.options[i] = document.createElement("option");
+				
+				if(i==0){
+					valeur = 00;
+				}else{
+					valeur = valeur + resmin;
+				}
+					frmContact.dureemin.options[i].text = valeur +" min";
+					frmContact.dureemin.options[i].value = valeur;
+					x.add(frmContact.dureemin.options[i]);
+				
+					frmContact.debdureemin.options[i].text = valeur +" min";
+					frmContact.debdureemin.options[i].value = valeur;
+					y.add(frmContact.debdureemin.options[i]);
+				}
+			frmContact.dureemin.options.selectedIndex = 0;
 		}
-		frmContact.dureemin.options.selectedIndex = 0;
-	}
-</script>
+	</script>
 	
 	
 	
@@ -116,7 +116,8 @@ include "include/language.inc.php";
 					
 						<label>Domaines : </label>
 						
-						<!-- modif  Chauvin Jérémy-->
+						
+						
 						<script>
 						function getSelectValueArea(){
 							var selectElmt = document.getElementById("area");
@@ -129,10 +130,9 @@ include "include/language.inc.php";
 						
 						
 						</script>
-						<!-- modif  Chauvin Jérémy-->
-						<select id="area" name="area" class="form-control" required >
-							<option value="">SELECTIONNER UN DOMAINE </option>
 						
+						<select id="area" name="area" class="form-control" required>
+							<option value="">SELECTIONNER UN DOMAINE </option>
 							<?php
 							$sql_areaName = "SELECT id, area_name,resolution_area FROM ".TABLE_PREFIX."_area ORDER BY area_name";
 							$res_areaName = grr_sql_query($sql_areaName);
@@ -143,15 +143,18 @@ include "include/language.inc.php";
 									$id = $row_areaName[0];
 									$area_name = $row_areaName[1];
 									$resolution_area = $row_areaName[2];
-									echo '<option onclick="" value="'.$id.'"> '.$area_name.'</option>'.PHP_EOL;
+									echo '<option onclick="" value="'.$id."/".$resolution_area.'"> '.$area_name.'</option>'.PHP_EOL;
 								}
 							}
+							
 							?>
 						</select>
-						<!-- modif  Chauvin Jérémy-->
+						<!-- modif Clement Talledec 
+						Selection des données situé dans le fichier frmcontactlist.php qui renvoit en fonction de l'id la valeur du room area -->
 						<script>
 							$(document).ready(function()
 							{
+								
 								var $domaine = $('#area');
 								var $salle = $('#room');
 								$domaine.on('change', function()
@@ -162,7 +165,7 @@ include "include/language.inc.php";
 									var id = value[0] ;
 									var resolution = value[1] ;
 									
-									remplirdureemin(resolution);
+									
 									//~ remplirdebdureemin(resolution);
 									if (id != '')
 									{
@@ -176,6 +179,11 @@ include "include/language.inc.php";
 											success: function(returnData)
 											{
 												$("#room").html(returnData);
+												return(resolution);
+											
+												
+												
+												
 											},
 											error: function(returnData)
 											{
@@ -186,18 +194,19 @@ include "include/language.inc.php";
 									else{
 										clearOptions('room');
 									}
-								});
+								});					
 							});
 						</script>
+						
+						
 					
 						<label>Ressources : </label>
-						<select id="room" name="room" class="form-control" required onChange="fct()">
+						
+						<select id="room" name="room" class="form-control" required>
 							<optgroup label="Salles">
-								<option value="">Selectionnez une ressource </option>
-						</select>
-						
-						
-						<!-- modif  Chauvin Jérémy-->
+								<option >Selectionnez une ressource </option>
+							</select>
+							<!-- modif  Chauvin Jérémy-->
 						<script>
 							//recupére id de l'area(domaine) selectionné ainsi que la room(ressource)
 							getSelectValueArea();
@@ -262,41 +271,77 @@ include "include/language.inc.php";
 
 						//fin ici
 						?>
-						
-						
 				</fieldset>
 				
-		</div>		
+		</div>
+				
+				
 		<div class="row">	
-				
-				<br>
-				
-				<legend><b> Date :</b></legend>
 				<fieldset>
+					
+				<legend><b> Date :</b></legend>
+	<!-- modif Clement Talledec 
+	Selection des données situé dans le fichier frmcontactlistDates.php qui renvoit en fonction de le premier formulaire dates ou le second formulaire date pour le nombre de jour -->
 
-					<?php
-					jQuery_DatePicker('start');
-					?>
+	<script>
 
-					<label >  Heure début :</label>
-					<?php
-						echo " <select class =\"test\" name=\"heure\"> ";
-						for ($h = 1 ; $h < 24 ; $h++)
-						{
-							echo "<option value =\"$h\"> ".sprintf("%02d",$h)."h </option>".PHP_EOL;
-						}
-						echo "</select>";
-						echo " <select id = 'debdureemin' class =\"test\" name=\"minutes\"> </select>";
-					?>
-							
-					<input class="form-control" type="text" id="duree" size="8" name="duree" placeholder="Durée en heure" required />
+$(document).ready(function()
+							{
+								
+								
+												
+								var $salle = $('#room');
+								var $Dates = $('#Dates');
+								$salle.on('change', function()
+								{	
+									var select = $(this);
+									var values = select.find(":selected").attr("value");
+									var value = values.split('/');
+									var id = value[0] ;
+									
+									
+									
+									if (id != '')
+									{
+										$Dates.empty();
+										jQuery.ajax({
+											type: 'GET',
+											url: 'frmcontactlistDates.php',
+											data: {
+												id: id
+											},
+											dataType : 'html',
+											success: function(returnData)
+											{
+
+												$("#Dates").html(returnData);
+													
+												
+											},
+											error: function(returnData)
+											{
+												alert('Erreur lors de l execution de la commande AJAX  ');
+											}
+										});
+									}
+									else {
+										clear('Dates');
+									}
+								});
+							});
+</script>
+
+
+
+	<div id = "Dates" >
 						
-					<select id="dureemin" name="dureemin" class="form-control">
-						<option> </option>
-						<option> </option>
-					</select>		
 			
+
+
+					
+								</div>
 				</fieldset>
+			
 		<br/>
 		<br/>
 
@@ -315,7 +360,7 @@ include "include/language.inc.php";
 	<?php echo get_vocab('bot_of_page'); ?>
 	</div>
 	
-	<!--<script>
+	<script>
 		jQuery(document).ready(function() {
 			jQuery("#frmContact").validate({
 			  rules: {
@@ -351,7 +396,7 @@ include "include/language.inc.php";
 			email: "Format d'Email invalide !",
 			digits:"Ce champs n'accepte que des chiffres."
 		});
-	</script> -->
+	</script>
 	
 </div>
 </form>

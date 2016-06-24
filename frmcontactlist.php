@@ -18,4 +18,6 @@ if ($nbresult != 0)
 }
 else
 	echo " <option value =\"1\">Aucune ressource liée à ce domaine</option>";
-?>
+
+
+					
