@@ -41,6 +41,13 @@ if (isset($_POST['show_courrier'])) {
         die();
     }
 }
+// Pour la gestion de fichiers
+if (isset($_POST['files'])) {
+    if (!Settings::set('files', $_POST['files'])) {
+        echo "Erreur lors de l'enregistrement de files !<br />";
+        die();
+    }
+}
 if (isset($_POST['show_holidays'])) {
     if (!Settings::set('show_holidays', $_POST['show_holidays'])) {
         echo "Erreur lors de l'enregistrement de show_holidays !<br />";
@@ -1278,6 +1285,33 @@ echo '<td>'.get_vocab('legend1').'</td>'.PHP_EOL;
 echo '<td>'.PHP_EOL;
 echo "<input type='radio' name='show_courrier' value='n' ";
 if (Settings::get('show_courrier') == 'n') {
+    echo 'checked="checked"';
+}
+echo ' />'.PHP_EOL;
+echo '</td>'.PHP_EOL;
+echo '</tr>'.PHP_EOL;
+echo '</table>'.PHP_EOL;
+
+		# Gestion des fichiers
+
+echo '<hr />'.PHP_EOL;
+echo '<h3>'.get_vocab('files').'</h3>'.PHP_EOL;
+echo '<table>'.PHP_EOL;
+echo '<tr>'.PHP_EOL;
+echo '<td>'.get_vocab('activate').'</td>'.PHP_EOL;
+echo '<td>'.PHP_EOL;
+echo "<input type='radio' name='files' value='y' ";
+if (Settings::get('files') == 'y') {
+    echo 'checked="checked"';
+}
+echo ' />'.PHP_EOL;
+echo '</td>'.PHP_EOL;
+echo '</tr>'.PHP_EOL;
+echo '<tr>'.PHP_EOL;
+echo '<td>'.get_vocab('not_activate').'</td>'.PHP_EOL;
+echo '<td>'.PHP_EOL;
+echo "<input type='radio' name='files' value='n' ";
+if (Settings::get('files') == 'n') {
     echo 'checked="checked"';
 }
 echo ' />'.PHP_EOL;

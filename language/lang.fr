@@ -935,8 +935,11 @@ $vocab['fouthofmonth'] = "4eme";
 $vocab['fiveofmonth'] = "5eme";
 $vocab['lastofmonth'] = "dernier";
 $vocab['ofmonth'] = "du mois.";
-$vocab['holidays_msg'] = "Afficher les Vacances scolaire et les jours fériés (France)";
+$vocab['holidays_msg'] = "Afficher les Vacances scolaires et les jours fériés (France)";
 $vocab['holidays_zone_msg'] = "Choix de la zone de vacances scolaire (France)";
 $vocab['courrier_msg'] = "Afficher la gestion des salles par courrier";
+$vocab['files'] = "Nouvelle fonctionnalité : ajout des fichiers dans les réservations";
+$vocab['activate'] = "Activée";
+$vocab['not_activate'] = "Désactivée";
 //$vocab['demande_reservation'] = "Demande de réservation";
 ?>

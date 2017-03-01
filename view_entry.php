@@ -577,7 +577,7 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 		// Accorder les droits en fonction du statut de l'utilisateur
 		$droit = authGetUserLevel(getUserName(), $room_id);
 		// gestion fichiers joints
-			if ($id != 0 && $droit>2){
+			if ($id != 0 && $droit>2 && Settings::get('files') == 'y'){
 				// récupère la liste des fichiers associé à la réservation.
 				$fRes = grr_sql_query("SELECT file_name, public_name from ".TABLE_PREFIX."_files where id_entry = '".$id."'");
 				if (!$fRes){

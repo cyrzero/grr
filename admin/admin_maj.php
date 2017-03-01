@@ -414,7 +414,14 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldname VARCHAR(40)");
 							
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldtype VARCHAR(40)");
-
+							
+							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='files';");
+							if ($req == -1){
+								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('files', '');");
+							}else{
+								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '' WHERE NAME = 'files';");
+							}	
+													
 							if ($result_inter == '')
 								$result .= "<span style=\"color:green;\">Ok !</span><br />";
 							else
