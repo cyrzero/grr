@@ -38,11 +38,11 @@ $month = date("m");
 $year  = date("Y");
 check_access(6, $back);
 // Initialisation
-$id_type = isset($_GET["id_type"]) ? $_GET["id_type"] : 0;
+$id_type = isset($_GET['id_type']) ? $_GET['id_type'] : 0;
 $type_name = isset($_GET["type_name"]) ? $_GET["type_name"] : NULL;
 $order_display = isset($_GET["order_display"]) ? $_GET["order_display"] : NULL;
 
-$couleurs = grr_sql_query1("SELECT couleur FROM ".TABLE_PREFIX."_ type_area WHERE id= '".$id_type."'");
+$couleurs = grr_sql_query1("SELECT couleur FROM ".TABLE_PREFIX."_type_area WHERE id = '".$id_type."'");
 
 $couleur = isset($_GET["couleur"]) ? $_GET["couleur"] : NULL;
 $disponible = isset($_GET["disponible"]) ? $_GET["disponible"] : NULL;
@@ -195,10 +195,10 @@ echo get_vocab('admin_type_explications')."<br /><br />";
 	<label for="background-color"> 
 		<?php echo "<p>".get_vocab("type_color").get_vocab("deux_points")."</p>" ?>
 	</label> 
-	
-	<input name="couleur" type="color" />
+		
 	
 	<?php
+	echo "<input name=\"couleur\" type=\"color\" value=$couleurs />";
 	echo "<table><tr><td>\n";
 	echo "<input type=\"submit\" name=\"change_type\"  value=\"".get_vocab("save")."\" />\n";
 	echo "</td><td>\n";

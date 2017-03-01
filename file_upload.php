@@ -29,7 +29,7 @@ include "include/language.inc.php";
 <?php
 print_header($day, $month, $year, $type_session);
 //ajout fichiers
-$id = $_GET["id"];
+$id = $_GET['id'];
 echo '
 <div class="upload">
 	
@@ -43,6 +43,12 @@ echo '
 	<progress id="avancement" value="0" max = "100" aria-valuemin="0" aria-valuemax="100"></progress>
 	
 	<output id=infos> </output>
+	
+	<form id="uploadForm" method="post" action="day.php" enctype="multipart/form-data">
+
+	<input type="submit" value="Retour" id ="btnRetourUpload">
+	
+	</form>
 </div>
 ';
 

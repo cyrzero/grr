@@ -248,11 +248,11 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 									if (isset($val[Settings::get("ldap_champ_nom")][0]))
 										$l_nom = ucfirst($val[Settings::get("ldap_champ_nom")][0]);
 									else
-										$l_nom = iconv("ISO-8859-1","utf-8","Nom à préciser");
+										$l_nom = iconv("UTF-8","ISO-8859-1","Nom à préciser");
 									if (isset($val[Settings::get("ldap_champ_prenom")][0]))
 										$l_prenom = ucfirst($val[Settings::get("ldap_champ_prenom")][0]);
 									else
-										$l_prenom = iconv("ISO-8859-1","utf-8","Prénom à préciser");
+										$l_prenom = iconv("UTF-8","ISO-8859-1","Prénom à préciser");
 									if (isset($val[Settings::get("ldap_champ_email")][0]))
 										$l_email = $val[Settings::get("ldap_champ_email")][0];
 									else
@@ -1147,11 +1147,11 @@ function grr_getinfo_ldap($_dn, $_login, $_password)
 			if (isset($val[Settings::get("ldap_champ_nom")][0]))
 				$l_nom = ucfirst($val[Settings::get("ldap_champ_nom")][0]);
 			else
-				$l_nom = iconv("ISO-8859-1","utf-8","Nom à préciser");
+				$l_nom = iconv("UTF-8","ISO-8859-1","Nom à préciser");
 			if (isset($val[Settings::get("ldap_champ_prenom")][0]))
 				$l_prenom = ucfirst($val[Settings::get("ldap_champ_prenom")][0]);
 			else
-				$l_prenom = iconv("ISO-8859-1","utf-8","Prénom à préciser");
+				$l_prenom = iconv("UTF-8","ISO-8859-1","Prénom à préciser");
 			if (isset($val[Settings::get("ldap_champ_email")][0]))
 				$l_email = $val[Settings::get("ldap_champ_email")][0];
 			else

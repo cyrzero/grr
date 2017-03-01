@@ -43,8 +43,6 @@ require_once("./include/session.inc.php");
 // Paramètres langage
 include "include/language.inc.php";
 
-$page = verif_page();
-
 $fin_session = 'n';
 if (!grr_resumeSession())
 	$fin_session = 'y';
@@ -246,7 +244,7 @@ if (authUserAccesArea(getUserName(), $area) == 0)
 	exit();
 }
 $date_now = time();
-
+$page = verif_page();
 get_planning_area_values($area);
 if ($enable_periods == 'y')
 	list( $start_period, $start_date) = period_date_string($row[10]);
@@ -575,6 +573,48 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 			}
 			echo '</table>',PHP_EOL;
 			echo '</fieldset>',PHP_EOL;
+			
+		// gestion fichiers joints
+			if ($id != 0){
+				// récupère la liste des fichiers associé à la réservation.
+				$fRes = grr_sql_query("SELECT file_name, public_name from ".TABLE_PREFIX."_files where id_entry = '".$id."'");
+				if (!$fRes){
+					fatal_error(0, grr_sql_error());
+				}
+				echo '<fieldset><legend style="font-weight:bold"> Fichiers joints : </legend>';
+				if(grr_sql_count($fRes) > 0){
+					
+					echo '<div>';
+					//définit le chemin d'accès au répertoire contenant les fichiers sur le serveur
+					$uploadDir = realpath(".")."/uploadedFiles/";
+					echo '<select name="UploadedFilesList" id="SelectFile" size = "6" style="width:80%">';
+					//rempli la liste avec les fichiers récupérés
+					while ($fRow = mysqli_fetch_row($fRes)){
+						echo '<option value="'.$fRow[0].'">'.$fRow[1].'</option>';
+					}
+					echo '</select>';
+					echo '<output id="retourInfos"> </output>';
+					echo '</div>';
+					echo '</fieldset>';
+				}
+				else{
+					echo "Aucun fichier joint";
+					echo "<br>";
+				}
+				if ((getWritable($beneficiaire, getUserName(), $id)) && verif_booking_date(getUserName(), $id, $room_id, -1, $date_now, $enable_periods) && verif_delais_min_resa_room(getUserName(), $room_id, $row[10]) && (!$was_del)){
+				//boutons de controle des fichiers joins
+				?>
+				<br><button onclick="window.location.href='file_upload.php?id=<?php echo $id ?>'">Ajouter</button>
+				<button onclick ="loadFile()">Télécharger</button>
+				<button onclick ="deleteFile(<?php echo $id ?>)">Supprimer</button><br>
+				
+				<?php
+				}
+			
+			grr_sql_free($fRes);
+		}
+			
+			//affichage périodicité
 			if ($repeat_id != 0)
 			{
 				$res = grr_sql_query("SELECT rep_type, end_date, rep_opt, rep_num_weeks, start_time, end_time FROM ".TABLE_PREFIX."_repeat WHERE id=$repeat_id");
@@ -728,7 +768,34 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 						echo "</form>";
 					}
 				}
-
+				if (isset($keys) && isset($courrier))
+				{
+					echo '<form action="view_entry.php" method="get">',PHP_EOL;
+					
+					//clef
+					//~ echo '<fieldset>',PHP_EOL,'<legend style="font-weight:bold">',get_vocab("reservation_en_cours"),'</legend>',PHP_EOL;
+					//~ echo '<span class="larger">',get_vocab("status_clef"),get_vocab("deux_points"),'</span>';
+					//~ echo '<br><input type="checkbox" name="clef" value="y" ';
+					//~ if ($keys == 1)
+						//~ echo ' checked ';
+					//~ echo ' /> ',get_vocab("msg_clef");
+					//~ if (Settings::get('show_courrier') == 'y')
+					//~ {
+						//~ echo '<br><span class="larger">',get_vocab("status_courrier"),get_vocab("deux_points"),'</span>';
+						//~ echo '<br><input type="checkbox" name="courrier" value="y" ';
+						//~ if ($courrier == 1)
+							//~ echo ' checked ';
+						//~ echo ' /> ',get_vocab("msg_courrier");
+					//~ }
+					//~ echo '<br><br>',PHP_EOL,'<div style="text-align:center;">',PHP_EOL,'<input class="btn btn-primary" type="submit" name="ok" value="',get_vocab("save"),'" /></div>',PHP_EOL,'</fieldset>',PHP_EOL;
+					echo '<div><input type="hidden" name="day" value="',$day,'" />',PHP_EOL;
+					echo '<input type="hidden" name="month" value="',$month,'" />',PHP_EOL;
+					echo '<input type="hidden" name="year" value="',$year,'" />',PHP_EOL;
+					echo '<input type="hidden" name="page" value="',$page,'" />',PHP_EOL;
+					echo '<input type="hidden" name="id" value="',$id,'" />',PHP_EOL;
+					echo '<input type="hidden" name="back" value="',$back,'" /></div>',PHP_EOL;
+					echo '</form>',PHP_EOL;
+				}
 				include_once('include/trailer.inc.php');
 				echo '</div>',PHP_EOL;
 				?>

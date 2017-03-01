@@ -316,7 +316,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						
 						//modif_Elodie
 						//maj version 3.6
-						if ($version_old < "3.6")
+						if ($version_old < "3.8")
 						{
 							$result .= "<b>Mise à jour jusqu'à la version 3.6 :</b><br />";
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_mail_port';");
@@ -364,7 +364,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = 'Demande de réservation' WHERE NAME = 'grr_mail_object';");
 							}
 							
-							//Changement du type de la colonne couleur de la table grrr_type_area plus remplacement des anciennes valeurs avec un update
+							//Changement du type de la colonne couleur de la table grr_type_area plus remplacement des anciennes valeurs avec un update
 							$tab_couleur[1] = "#F49AC2";
 							$tab_couleur[2] = "#99CCCC";
 							$tab_couleur[3] = "#FF9999";
@@ -397,22 +397,15 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_type_area MODIFY couleur CHAR(7)");
 							
 							for($i=1; $i<29; $i++) {
-									$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_type_area SET couleur = '".$tab_couleur[$i]."' WHERE couleur = '".$i."'");
+								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_type_area SET couleur = '".$tab_couleur[$i]."' WHERE couleur = '".$i."'");
 							}
-
-							if ($result_inter == '')
-								$result .= "<span style=\"color:green;\">Ok !</span><br />";
-							else
-								$result .= $result_inter;
-							$result_inter = '';
-						}
-						
-						//maj version 3.7
-						if ($version_old < "3.7")
-						{
-							$result .= "<b>Mise à jour jusqu'à la version 3.7 :</b><br />";
+							
 							$result_inter .= traite_requete("Create table if not exists ".TABLE_PREFIX."_files(id int not null, id_entry int, file_name varchar(50), public_name varchar(50),Primary key (id), constraint fk_idEntry foreign key (id_entry) references resatest.grr_entry(id));");
-								
+
+							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldname VARCHAR(40)");
+							
+							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldtype VARCHAR(40)");
+
 							if ($result_inter == '')
 								$result .= "<span style=\"color:green;\">Ok !</span><br />";
 							else
