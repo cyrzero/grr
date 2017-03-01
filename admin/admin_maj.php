@@ -400,7 +400,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_type_area SET couleur = '".$tab_couleur[$i]."' WHERE couleur = '".$i."'");
 							}
 							
-							$result_inter .= traite_requete("Create table if not exists ".TABLE_PREFIX."_files(id int not null, id_entry int, file_name varchar(50), public_name varchar(50),Primary key (id), constraint fk_idEntry foreign key (id_entry) references resatest.grr_entry(id));");
+							$result_inter .= traite_requete("Create table if not exists ".TABLE_PREFIX."_files(id int not null auto_increment, id_entry int, file_name varchar(50), public_name varchar(50), Primary key (id), constraint fk_idEntry foreign key (id_entry) references resatest.grr_entry(id));");
 
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldname VARCHAR(40)");
 							
