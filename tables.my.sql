@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS grr_j_useradmin_site;
 CREATE TABLE grr_j_useradmin_site (login varchar(40) NOT NULL default '', id_site int(11) NOT NULL default '0', PRIMARY KEY  (login,id_site) ) CHARACTER SET utf8;
 DROP TABLE IF EXISTS grr_correspondance_statut;
 CREATE TABLE grr_correspondance_statut (id int(11) NOT NULL auto_increment, code_fonction varchar(30) NOT NULL, libelle_fonction varchar(200) NOT NULL, statut_grr varchar(30) NOT NULL,  PRIMARY KEY (id)) CHARACTER SET utf8;
+CREATE TABLE grr_files(id int not null auto_increment, id_entry int, file_name varchar(50), public_name varchar(50),Primary key (id), constraint fk_idEntry foreign key (id_entry) references grr_entry(id));
 INSERT INTO grr_setting VALUES ('sessionMaxLength', '30');
 INSERT INTO grr_setting VALUES ('automatic_mail', 'yes');
 INSERT INTO grr_utilisateurs VALUES ('ADMINISTRATEUR', 'Administrateur', 'grr', 'ab4f63f9ac65152575886860dde480a1', 'admin@labas.fr', 'administrateur', 'actif', 0, 0, 0, 'default', 'item', 'fr','local');
