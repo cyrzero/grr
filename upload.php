@@ -22,7 +22,8 @@ if (isset ($_FILES) && is_array($_FILES)){
 		$id = $_POST["id_entry"];
 	}
 	else{
-		echo "aucune id reçue<br>";
+		//~ echo "Aucun id reçue !";
+		$id = $_GET['id'];
 	}
 	//chemin de destination
 	$uploadDir = realpath(".")."/uploadedFiles/";
@@ -46,6 +47,7 @@ if (isset ($_FILES) && is_array($_FILES)){
 				else{
 					if ($copie){
 						echo "<br> <span style='color:green'>Fichier enregistré</span></p>";
+						header('Location: day.php?area=1');
 					}
 					else{
 						echo "<br><span style='color:red'>Erreur d'enregistrement</span></p>";
