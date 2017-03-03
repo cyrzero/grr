@@ -497,7 +497,6 @@ affiche_pop_up(get_vocab('message_records'), 'user');
         document.getElementById('selectedfile').value=document.getElementById('hiddenfile').value;
     }
 </script>
-<script type="text/javascript" src="js/functions.js"></script>
 <?php
 unset($row);
 echo '</div>'.PHP_EOL;

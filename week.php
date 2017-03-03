@@ -615,6 +615,13 @@ for ($t = $week_start; $t <= $week_end; $t += 86400)
 				$("#popup_name").draggable({containment: "#container"});
 				$("#popup_name").resizable();
 		});
+		
+		function getfile(){
+        document.getElementById('hiddenfile').click();
+	    }
+	    function getvalue(){
+	        document.getElementById('selectedfile').value=document.getElementById('hiddenfile').value;
+	    }
 
 	</script>
 	<?php

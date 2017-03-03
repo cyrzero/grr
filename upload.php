@@ -47,7 +47,7 @@ if (isset ($_FILES) && is_array($_FILES)){
 				else{
 					if ($copie){
 						echo "<br> <span style='color:green'>Fichier enregistré</span></p>";
-						header('Location: day.php?area=1');
+						header('Location: week_all.php?');
 					}
 					else{
 						echo "<br><span style='color:red'>Erreur d'enregistrement</span></p>";

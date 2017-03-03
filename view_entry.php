@@ -586,8 +586,6 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 				
 				?>
 
-				<script type="text/javascript" src="js/functions.js"></script>
-
 				<div class="upload">
 					
 					<form id="uploadForm" method="post" action = "upload.php?id=<?php echo $id ?>" enctype="multipart/form-data">
@@ -596,7 +594,7 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 					
 						<input type="file" id="hiddenfile" style="display:none" name="myFiles[]" onChange="getvalue();"/>
 						<input type="button" value="Parcourir ..." onclick="getfile();"/>
-						<input type="text" id="selectedfile" name="myFile" value="Nom du fichier"/>
+						<input type="text" id="selectedfile" name="myFile" value="Nom du fichier" />
 						
 						<input type="hidden" id = "id_entry" value = "'.$id.'">
 						<input type="submit" value="Envoyer" id ="btnValidUpload" >
@@ -615,7 +613,7 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 				        document.getElementById('hiddenfile').click();
 				    }
 				    function getvalue(){
-				        document.getElementById('selectedfile').value=document.getElementById('hiddenfile').value;
+				        document.getElementById('hiddenfile').value=document.getElementById('selectedfile').value;
 				    }
 
 				</script>
