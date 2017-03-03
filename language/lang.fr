@@ -941,5 +941,6 @@ $vocab['courrier_msg'] = "Afficher la gestion des salles par courrier";
 $vocab['files'] = "Nouvelle fonctionnalité : ajout des fichiers dans les réservations";
 $vocab['activate'] = "Activée";
 $vocab['not_activate'] = "Désactivée";
+$vocab['file_management'] = "Choisissez le fichier que vous allez insérer dans cette réservation : ";
 //$vocab['demande_reservation'] = "Demande de réservation";
 ?>

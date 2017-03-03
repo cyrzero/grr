@@ -318,7 +318,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						//maj version 3.6
 						if ($version_old <= "3.5")
 						{
-							$result .= "<b>Mise à jour jusqu'à la version 3.6 :</b><br />";
+							$result .= "<b>Mise à jour jusqu'à la version 3.5 :</b><br />";
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_mail_port';");
 							if ($req == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('grr_mail_port', '25');");
@@ -409,6 +409,8 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						
 						if ($version_old <= "3.6"){
 							
+							$result .= "<b>Mise à jour jusqu'à la version 3.6 :</b><br />";
+
 							$result_inter .= traite_requete("Create table if not exists ".TABLE_PREFIX."_files(id int not null auto_increment, id_entry int, file_name varchar(50), public_name varchar(50), Primary key (id), constraint fk_idEntry foreign key (id_entry) references ".TABLE_PREFIX."_entry(id));");
 
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldname VARCHAR(40)");
