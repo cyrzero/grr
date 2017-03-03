@@ -20,10 +20,12 @@ if (isset ($_FILES) && is_array($_FILES)){
 	//si une id à bien été reçue
 	if(isset ($_POST["id_entry"])){
 		$id = $_POST["id_entry"];
+		$file = $_POST["selectedfile"];
 	}
 	else{
 		//~ echo "Aucun id reçue !";
 		$id = $_GET['id'];
+		$file = $_GET['selectedfile'];
 	}
 	//chemin de destination
 	$uploadDir = realpath(".")."/uploadedFiles/";

@@ -583,42 +583,46 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 				if (!$fRes){
 					fatal_error(0, grr_sql_error());
 				}
-				
-				?>
-
-				<div class="upload">
+				//~ $selectedfile = "Ahah ça marche pas";
+				echo '<div class="upload">
 					
-					<form id="uploadForm" method="post" action = "upload.php?id=<?php echo $id ?>" enctype="multipart/form-data">
+					<!-- <form id="uploadForm" method="post" action="upload.php?id=',$id,'&amp;selectedfile=',$selectedfile,'" enctype="multipart/form-data"> -->
+					<form id="uploadForm" method="post" action="upload.php?id=',$id,'" enctype="multipart/form-data">
 
 					<h4 style="font-weight:bold">Choisissez le fichier que vous allez insérer dans cette réservation : <br></h4>
-					
+						<!--
+						<input type="file" id="hiddenfile" name="myFiles[]" onChange="getvalue();"/>
+						-->
+						
 						<input type="file" id="hiddenfile" style="display:none" name="myFiles[]" onChange="getvalue();"/>
 						<input type="button" value="Parcourir ..." onclick="getfile();"/>
-						<input type="text" id="selectedfile" name="myFile" value="Nom du fichier" />
+						<input type="text" id="selectedfile" name="selectedfile" value="Nom du fichier" />
 						
 						<input type="hidden" id = "id_entry" value = "'.$id.'">
-						<input type="submit" value="Envoyer" id ="btnValidUpload" >
+						<input type="submit" value="Envoyer" id ="btnValidUpload" onChange="getvalue()">
 				
 					</form>
 					
 					<output id=infos> </output>
 					
-				</div>
+				</div>';
 				
-				<script type="text/javascript" >
+				echo '<script type="text/javascript" >
 					
 					uploadFiles();
 					
 					function getfile(){
-				        document.getElementById('hiddenfile').click();
+				        document.getElementById(\'hiddenfile\').click();
 				    }
 				    function getvalue(){
-				        document.getElementById('hiddenfile').value=document.getElementById('selectedfile').value;
+				        document.getElementById(\'selectedfile\').value=document.getElementById(\'hiddenfile\').value;
+				    }
+				    function getvalue2(){
+				        document.getElementById(\'hiddenfile\').value=document.getElementById(\'selectedfile\').value;
 				    }
 
-				</script>
+				</script>';
 				
-				<?php
 				echo '<fieldset><h4 style="font-weight:bold"> Fichiers joints : </h4>';
 					if(grr_sql_count($fRes) > 0){
 						echo '<div>';
@@ -633,15 +637,15 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 					echo '<output id="retourInfos"> </output>';
 					echo '</div>';
 					echo '</fieldset>';
+					
+					echo '<button onclick ="loadFile()">Télécharger</button>';
+					echo '<button onclick ="deleteFile('.$id.')">Supprimer</button><br>';
 					}
 					else{
 						echo "Aucun fichier joint";
 						echo "<br>";
 					}
-				?>	
-					<button onclick ="loadFile()">Télécharger</button>
-					<button onclick ="deleteFile(<?php echo $id ?>)">Supprimer</button><br>
-				<?php
+	
 
 			grr_sql_free($fRes);
 		}
