@@ -137,6 +137,7 @@ if ($etape == 4)
 	begin_html();
 	echo "<br /><h2>Quatrième étape : Création des tables de la base</h2>";
 	$db = mysqli_connect("$adresse_db", "$login_db", "$pass_db");
+  mysqli_set_charset($db,"utf8");// modification françois chevalier
 	if ($choix_db == "new_grr")
 	{
 		$sel_db = $table_new;
