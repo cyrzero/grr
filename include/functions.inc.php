@@ -806,10 +806,10 @@ function page_accueil($param = 'no')
 		$defaultarea = get_default_area($defaultsite);
 	// Calcul de $page_accueil
 	if ($defaultarea == - 1)
-		$page_accueil = 'day.php?noarea=';
+		$page_accueil = 'week_all.php?noarea=';
 	// le paramètre noarea ne sert à rien, il est juste là pour éviter un cas particulier à traiter avec &amp;id_site= et $param
 	else if ($defaultroom == - 1)
-		$page_accueil = 'day.php?area='.$defaultarea;
+		$page_accueil = 'week_all.php?area='.$defaultarea;
 
 	else if ($defaultroom == - 2)
 	//gestion URL admin
@@ -819,7 +819,6 @@ function page_accueil($param = 'no')
 		$page_accueil = 'week_all.php?area='.$defaultarea;
 	}
 
-	
 	else if ($defaultroom == - 3)
 		$page_accueil = 'month_all.php?area='.$defaultarea;
 	else if ($defaultroom == -4)
@@ -924,9 +923,9 @@ function begin_page($title, $page = "with_session")
 			$a .= '<script type="text/javascript" src="../js/'.$clock_file.'"></script>'.PHP_EOL;
 		if (substr(phpversion(), 0, 1) == 3)
 			$a .= get_vocab('not_php3');
-	
+
 	} else{
-	
+
 		$a .= '<link rel="stylesheet" type="text/css" href="'.$sheetcss.'/style.css" />'.PHP_EOL;
 		$a .= '<link rel="stylesheet" type="text/css" href="'.$sheetcss.'/bootstrap.min.css" />'.PHP_EOL;
 		$a .= '<link rel="stylesheet" type="text/css" href="'.$sheetcss.'/mod_bootstrap.css" />'.PHP_EOL;
@@ -1769,8 +1768,8 @@ function tdcell_rowspan($colclass, $step)
 		$step = 1;
 	if (($colclass >= "A") && ($colclass <= "Z"))
 	{
-		$couleur = grr_sql_query1("SELECT couleur FROM ".TABLE_PREFIX."_type_area WHERE type_letter='".$colclass."'");	
-		echo '<td rowspan="'.$step.'" style="background-color:'.$couleur.';">'.PHP_EOL;			
+		$couleur = grr_sql_query1("SELECT couleur FROM ".TABLE_PREFIX."_type_area WHERE type_letter='".$colclass."'");
+		echo '<td rowspan="'.$step.'" style="background-color:'.$couleur.';">'.PHP_EOL;
 	}
 	else
 		echo '<td rowspan="'.$step.'" td class="'.$colclass.'">'.PHP_EOL;
@@ -2384,7 +2383,7 @@ function make_room_item_html($link, $current_area, $current_room, $year, $month,
 					$out_html .= '<input class="btn btn-default btn-lg btn-block item" type="button" name="'.$row[0].'" value="'.htmlspecialchars($row[1]).'" onclick="location.href=\''.$link2.'\' ;charger();"/>'.PHP_EOL;
 					$all_ressource = 1;
 				}
-				else //changed (Ajout de type = " button pr gerer saut de ligne " 
+				else //changed (Ajout de type = " button pr gerer saut de ligne "
 				{
 					if (isset($all_ressource) && $all_ressource == 0)
 						$out_html .= '<input class="btn btn-primary btn-lg btn-block item" type="button" name="all_room" value="Toutes les ressources" onclick="location.href=\''.$link_all_room.'\' ;charger();"/>'.PHP_EOL;
@@ -2668,7 +2667,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 
 	//
 	// Infos sur la réservation
-	//		
+	//
 	$reservation = '';
 	$reservation = $reservation.$vocab["start_of_the_booking"]." ".$start_date."\n";
 	$reservation = $reservation.$vocab["duration"]." ".$duration." ".$dur_units."\n";
@@ -2724,7 +2723,7 @@ function send_mail($id_entry, $action, $dformat, $tab_id_moderes = array())
 	$res = grr_sql_query($sql);
 	$nombre = grr_sql_count($res);
 	if ($nombre > 0)
-	{ 
+	{
 		$tab_destinataire = array();
 		for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 		{
@@ -2982,7 +2981,7 @@ function getWritable($beneficiaire, $user, $id)
 //$user - l'identifiant de l'utilisateur
 //$id_room -   l'identifiant de la ressource
 //Retourne le niveau d'accès de l'utilisateur//
-function auth_visiteur($user,$id_room) 
+function auth_visiteur($user,$id_room)
 {
 	global $id_room_autorise;
 	if ((!isset($user)) || (!isset($id_room)))
@@ -4433,7 +4432,7 @@ function affiche_nom_prenom_email($_beneficiaire, $_beneficiaire_ext, $type = "n
  			$month = $date['month'];
  			$year = $date['year'];
  		}
- 		else{ 		
+ 		else{
 			//si aucun résultat, récupère la date passée en lien ou la date du jour
 			if (isset ($_GET['day']))
 				$day = $_GET['day'];
@@ -4465,7 +4464,7 @@ function affiche_nom_prenom_email($_beneficiaire, $_beneficiaire_ext, $type = "n
  			$month = $date['month'];
  			$year = $date['year'];
  		}
- 		else{ 		
+ 		else{
 			//si aucun résultat, récupère la date passée en lien ou la date du jour
 			if (isset ($_GET['day']))
 				$day = $_GET['day'];
@@ -4482,7 +4481,7 @@ function affiche_nom_prenom_email($_beneficiaire, $_beneficiaire_ext, $type = "n
 			}
  	}
  	else
- 	{	
+ 	{
 		//si fonction appelée sans argument ou sans id, récupère la date passée en argument ou la date du jour.
 		if (isset ($_GET['day']))
 			$day = $_GET['day'];
@@ -4497,7 +4496,7 @@ function affiche_nom_prenom_email($_beneficiaire, $_beneficiaire_ext, $type = "n
 		else
 			$year = date("Y");
 	}
-	
+
  	genDateSelector("".$typeDate."_", "$day", "$month", "$year","");
  	echo '<input type="hidden" disabled="disabled" id="mydate_' .$typeDate. '">'.PHP_EOL;
  	echo '<script>'.PHP_EOL;
@@ -4550,28 +4549,28 @@ function jQuery_TimePicker($typeTime, $start_hour, $start_min, $dureepardefaults
 			$minute = $_GET['minute'];
 		else
 			$minute = date("m");
-			
-			
+
+
 		if ($typeTime == 'start_' || $typeTime == 'end_'){
 
 		$dureepardefautmin = $dureepardefaultsec/60;
-		
+
 		if ($dureepardefautmin == 60){
 			$ajout = 1;
 			$hour = $_GET['hour'] + $ajout;
 			$minute ="00";
 		}
-		
+
 		if ($dureepardefautmin < 60){
 			$hour = $_GET['hour'];
 			//~ $hour = date("h");
 			$minute =$dureepardefautmin;
 		}
-		
+
 		if ($dureepardefautmin > 60){
-		
+
 		$dureepardefautheure = $dureepardefautmin/60;
-		
+
 		if (($dureepardefautheure % 60)!=0){
 			$hour = $_GET['hour']+ $dureepardefautheure;
 			if ($_GET['minute'] == 30){
@@ -4581,7 +4580,7 @@ function jQuery_TimePicker($typeTime, $start_hour, $start_min, $dureepardefaults
 				};
 			}
 		}
-		
+
 	};
 
 	}
