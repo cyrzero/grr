@@ -44,8 +44,8 @@ $change_area = isset($_POST["change_area"]) ? $_POST["change_area"] : NULL;
 $area_name = isset($_POST["area_name"]) ? $_POST["area_name"] : NULL;
 $access = isset($_POST["access"]) ? $_POST["access"] : NULL;
 $ip_adr = isset($_POST["ip_adr"]) ? $_POST["ip_adr"] : NULL;
-$room_name = isset($_POST["room_name"]) ? $_POST["room_name"] : NULL;
-$description = isset($_POST["description"]) ? $_POST["description"] : NULL;
+$room_name = htmlspecialchars(isset($_POST["room_name"]) ? $_POST["room_name"] : NULL);
+$description = htmlspecialchars(isset($_POST["description"]) ? $_POST["description"] : NULL);
 $capacity = isset($_POST["capacity"]) ? $_POST["capacity"] : NULL;
 $duree_max_resa_area1  = isset($_POST["duree_max_resa_area1"]) ? $_POST["duree_max_resa_area1"] : NULL;
 $duree_max_resa_area2  = isset($_POST["duree_max_resa_area2"]) ? $_POST["duree_max_resa_area2"] : NULL;
@@ -1051,10 +1051,10 @@ if ((!empty($id_area)) || (isset($add_area)))
 		echo "<tr>\n";
 		echo "<td>".get_vocab("cocher_jours_a_afficher")."</td>\n";
 		echo "<td>\n";
-		
-		
+
+
 		//echo "<p>" .day_name("3")."</p>";
-		
+
 		//~ for ($i = 0; $i < 7; $i++)
 		//~ {
 			//~ echo "<label> <input name= \"display_day[".$i."]\"type=\"checkbox\"";
@@ -1062,7 +1062,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 				//~ echo " checked=\"checked\"";
 				//~ echo "/>".day_name["$i"]. "</label><br/>\n" ;
 		//~ }
-		
+
 		//$daynumber=$i;
 		for ($i = 0; $i < 7; $i++)
 		{
@@ -1072,7 +1072,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 				echo " checked=\"checked\"";
 				echo "/>". strftime("%A", $tmp)."</label><br/>\n" ;
 		}
-		
+
 		echo "</td>\n";
 		echo "</tr></table>";
 		echo "<h3>".get_vocab("type_de_creneaux")."</h3>";
@@ -1206,7 +1206,6 @@ if ((!empty($id_area)) || (isset($add_area)))
 	</body>
 	</html>
 
-    Contact GitHub API Training Shop Blog About 
+    Contact GitHub API Training Shop Blog About
 
-    © 2017 GitHub, Inc. Terms Privacy Security Status Help 
-
+    © 2017 GitHub, Inc. Terms Privacy Security Status Help
