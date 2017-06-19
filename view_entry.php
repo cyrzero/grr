@@ -573,19 +573,19 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 			}
 			echo '</table>',PHP_EOL;
 			echo '</fieldset>',PHP_EOL;
-			
+
 		// Accorder les droits en fonction du statut de l'utilisateur
 		$droit = authGetUserLevel(getUserName(), $room_id);
 		// gestion fichiers joints si l'utilisateur à les droits en plus que la fonctionnalité soit activée
 			if ($id != 0 && $droit>2 && Settings::get('files') == 'y'){
 				// récupère la liste des fichiers associé à la réservation.
-				$fRes = grr_sql_query("SELECT file_name, public_name from ".TABLE_PREFIX."_files where id_entry = '".$id."'");
+				$fRes = grr_sql_query("SELECT id, file_name, public_name from ".TABLE_PREFIX."_files where id_entry = '".$id."'");
 				if (!$fRes){
 					fatal_error(0, grr_sql_error());
 				}
 				//~ $selectedfile = "Ahah ça marche pas";
 				echo '<div class="upload">
-					
+
 					<!-- <form id="uploadForm" method="post" action="upload.php?id=',$id,'&amp;selectedfile=',$selectedfile,'" enctype="multipart/form-data"> -->
 					<form id="uploadForm" method="post" action="upload.php?id=',$id,'" enctype="multipart/form-data">
 
@@ -593,24 +593,24 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 						<!--
 						<input type="file" id="hiddenfile" name="myFiles[]" onChange="getvalue();"/>
 						-->
-						
+
 						<input type="file" id="hiddenfile" style="display:none" name="myFiles[]" onChange="getvalue();"/>
 						<input type="button" value="Parcourir ..." onclick="getfile();"/>
 						<input type="text" id="selectedfile" name="selectedfile" value="Nom du fichier" />
-						
+
 						<input type="hidden" id = "id_entry" value = "'.$id.'">
 						<input type="submit" value="Envoyer" id ="btnValidUpload" onChange="getvalue()">
-				
+
 					</form>
-					
+
 					<output id=infos> </output>
-					
+
 				</div>';
-				
+
 				echo '<script type="text/javascript" >
-					
+
 					uploadFiles();
-					
+
 					function getfile(){
 				        document.getElementById(\'hiddenfile\').click();
 				    }
@@ -622,34 +622,44 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 				    }
 
 				</script>';
-				
+
 				echo '<fieldset><h4 style="font-weight:bold"> Fichiers joints : </h4>';
 					if(grr_sql_count($fRes) > 0){
 						echo '<div>';
 						//définit le chemin d'accès au répertoire contenant les fichiers sur le serveur
 						$uploadDir = realpath(".")."/uploadedFiles/";
-						echo '<select name="UploadedFilesList" id="SelectFile" size = "2" style="width:80%">';
+						//echo '<select name="UploadedFilesList" id="SelectFile" size = "2" style="width:80%">';
+						echo "<table style='border: 1px solid grey; width:80%' id='table_supprimer'>
+								  <tr style='border: 1px solid grey;'>
+										<th style='border: 1px solid grey;'>Nom du Fichier</th>
+										<th style='border: 1px solid grey;'></th>
+									</tr>";
 					//rempli la liste avec les fichiers récupérés
 					while ($fRow = mysqli_fetch_row($fRes)){
-						echo '<option value="'.$fRow[0].'">'.$fRow[1].'</option>';
+					echo "<tr style='border: 1px solid grey;'>
+									<td><a href=./uploadedFiles/$fRow[1] download='$fRow[2]'>$fRow[2]</a></td>
+									<td><img src='images/croix.jpeg' alt='icone_supprimer' onclick='deleteFile($id,this.parentNode.parentNode.rowIndex,$fRow[0])' /></td>
+								</tr>";
+						//echo '<option value="'.$fRow[0].'">'.$fRow[1].'</option>';
 					}
-					echo '</select>';
+					echo "</table>";
+					//echo '</select>';
 					echo '<output id="retourInfos"> </output>';
 					echo '</div>';
 					echo '</fieldset>';
-					
-					echo '<button onclick ="loadFile()">Télécharger</button>';
-					echo '<button onclick ="deleteFile('.$id.')">Supprimer</button><br>';
+
+					//echo '<button onclick ="loadFile()">Télécharger</button>';
+					//echo '<button onclick ="deleteFile('.$id.')">Supprimer</button><br>';
 					}
 					else{
 						echo "Aucun fichier joint";
 						echo "<br>";
 					}
-	
+
 
 			grr_sql_free($fRes);
 		}
-			
+
 			//affichage périodicité
 			if ($repeat_id != 0)
 			{
@@ -808,7 +818,7 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 				//~ if (isset($keys) && isset($courrier))
 				//~ {
 					//~ echo '<form action="view_entry.php" method="get">',PHP_EOL;
-					
+
 					//~ //clef
 					//~ echo '<fieldset>',PHP_EOL,'<legend style="font-weight:bold">',get_vocab("reservation_en_cours"),'</legend>',PHP_EOL;
 					//~ echo '<span class="larger">',get_vocab("status_clef"),get_vocab("deux_points"),'</span>';

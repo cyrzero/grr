@@ -1,4 +1,4 @@
-// Permet de faire une validation afin que l'usager ne puisse pas sélectionner un jour invalide pour le début du premier Jours/Cycle
+// Permet de faire une validation afin que l'usager ne puisse pas sï¿½lectionner un jour invalide pour le dï¿½but du premier Jours/Cycle
 function verifierJoursCycles()
 {
 	valeurA = document.getElementById('jourDebut').value;
@@ -45,9 +45,9 @@ function clicMenu(num)
 function centrerpopup(page,largeur,hauteur,options)
 {
 // les options :
-//    * left=100 : Position de la fenêtre par rapport au bord gauche de l'écran.
-//    * top=50 : Position de la fenêtre par rapport au haut de l'écran.
-//    * resizable=x : Indique si la fenêtre est redimensionnable.
+//    * left=100 : Position de la fenï¿½tre par rapport au bord gauche de l'ï¿½cran.
+//    * top=50 : Position de la fenï¿½tre par rapport au haut de l'ï¿½cran.
+//    * resizable=x : Indique si la fenï¿½tre est redimensionnable.
 //    * scrollbars=x : Indique si les barres de navigations sont visibles.
 //    * menubar=x : Indique si la barre des menus est visible.
 //    * toolbar=x : Indique si la barre d'outils est visible.
@@ -90,11 +90,11 @@ function confirmButton(theform,themessage)
 }
 // end of the 'confirmButton()' function
 /**
- * Checks/unchecks les boites à cocher
+ * Checks/unchecks les boites ï¿½ cocher
  *
  * the_form   string   the form name
  * do_check   boolean  whether to check or to uncheck the element
- * day la valaur de de la boite à cocher ou à décocher
+ * day la valaur de de la boite ï¿½ cocher ou ï¿½ dï¿½cocher
  * return  boolean  always true
  */
  function setCheckboxesGrr(elts, do_check, day)
@@ -129,13 +129,13 @@ function _setCheckboxesGrr(the_form, do_check, day)
 	return true;
 }
 // end of the 'setCheckboxes()' function
-// Les quatre fonctions qui suivent servent à enregistrer un cookie
-// Elles sont utilisé par edit_enty.php pour conserver les informations de la saisie pour
-// pouvoir les récupérer lors d'une erreur.
+// Les quatre fonctions qui suivent servent ï¿½ enregistrer un cookie
+// Elles sont utilisï¿½ par edit_enty.php pour conserver les informations de la saisie pour
+// pouvoir les rï¿½cupï¿½rer lors d'une erreur.
 //Hugo
 // Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues
 var FS_INCLUDE_NAMES = 0, FS_EXCLUDE_NAMES = 1, FS_INCLUDE_IDS = 2, FS_EXCLUDE_IDS = 3, FS_INCLUDE_CLASSES = 4, FS_EXCLUDE_CLASSES = 5;
-//Hugo - fonction qui récupère les informations des champs input pour les stocker dans un cookie (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
+//Hugo - fonction qui rï¿½cupï¿½re les informations des champs input pour les stocker dans un cookie (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
 function getFormString( formRef, oAndPass, oTypes, oNames )
 {
 	if (oNames)
@@ -183,7 +183,7 @@ function getFormString( formRef, oAndPass, oTypes, oNames )
 	}
 	return oStr;
 }
-//Hugo - Fonction qui récupère les informations stockées de le cookie pour les remttres dans les inputs (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
+//Hugo - Fonction qui rï¿½cupï¿½re les informations stockï¿½es de le cookie pour les remttres dans les inputs (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
 function recoverInputs( formRef, oStr, oAndPass, oTypes, oNames )
 {
 	if (oStr)
@@ -281,7 +281,7 @@ function setCookie(cookieName, cookieValue, lifeTime, path, domain, isSecure)
 	}
 	return false;
 }
-/* fonction qui est utilisée pour basculer un élément d'une liste1 vers une liste2 et inversement (utilisé lors de la création d'une demande) */
+/* fonction qui est utilisï¿½e pour basculer un ï¿½lï¿½ment d'une liste1 vers une liste2 et inversement (utilisï¿½ lors de la crï¿½ation d'une demande) */
 function Deplacer(liste1, liste2)
 {
 	while (liste1.options.selectedIndex >= 0)
@@ -307,7 +307,7 @@ function selectionner_liste(IdListe)
 		IdListe.options[i].selected = true;
 	}
 }
-/*-----MAJ Loïs THOMAS  --> Fonctions qui permettent de cacher et afficher le menu à gauche -----*/
+/*-----MAJ Loï¿½s THOMAS  --> Fonctions qui permettent de cacher et afficher le menu ï¿½ gauche -----*/
 function divaffiche(month_all2)
 {
 	var Nbr = month_all2;
@@ -369,7 +369,7 @@ function clearOptions(id){
 	document.getElementById(id).innerHTML= '<optgroup label="Salles"><option value="">Selectionnez une ressource </option>'
 }
 
-//lance l'impression après clic sur bouton et si configuré pour
+//lance l'impression aprï¿½s clic sur bouton et si configurï¿½ pour
 function printPage(optionPrint){
 	console.log("test print");
 	if((window.location.href.indexOf("&pview=1&precedent=1") > -1) & (optionPrint == 1)){
@@ -383,35 +383,35 @@ function printPage(optionPrint){
 //==Gestion des fichiers joints==
 //upload des fichiers.
 function uploadFiles(){
-	
+
 	var myForm = document.getElementById("uploadForm");
 	var progress = document.getElementById("avancement");
 	var infos = document.getElementById("infos");
-	
+
 	myForm.onsubmit = function(event){
-		
-		//désactive le traitement normal du formulaire
+
+		//dï¿½sactive le traitement normal du formulaire
 		event.preventDefault();
-		
+
 		//dispo de formData
 		if(window.FormData){
 			var fd = new FormData();
 		}
 		else{
-			alert("FormData non supporté par votre navigateur");
+			alert("FormData non supportï¿½ par votre navigateur");
 			return;
 		}
-		
+
 		//init ajax
 		var xhr = new XMLHttpRequest();
-		
-		//parametre de la requête
+
+		//parametre de la requï¿½te
 		//myForm.getAttribute("action") = "upload.php";
 		xhr.open("post", myForm.getAttribute("action"), true);
-		
+
 		xhr.onreadystatechange = function(event){
 			if(this.readyState == 4){
-				//affichage du retour texte de la requête
+				//affichage du retour texte de la requï¿½te
 				infos.innerHTML += event.target.responseText;
 			}
 		};
@@ -423,50 +423,47 @@ function uploadFiles(){
 				progress.value = pourcentage;
 			}
 		};
-		
-		//liste des fichiers et id à envoyer
+
+		//liste des fichiers et id ï¿½ envoyer
 		var inputFiles = document.getElementById('myFiles');
 		var fichiers = inputFiles.files;
-		
+
 		for(i=0; i<fichiers.length; i++){
 			infos.innerHTML += "Envoi de "+fichiers[i].name+"...<br>";
 			fd.append(inputFiles.name, fichiers[i]);
 		}
 		var id_index = document.getElementById('id_entry');
 		fd.append("id_entry", id_index.value);
-		//envoi des données
+		//envoi des donnï¿½es
 		xhr.send(fd);
 	};
 }
 
 function loadFile(){
-	// vérifie si une ligne est sélectionnée
+	// vï¿½rifie si une ligne est sï¿½lectionnï¿½e
 	var target = document.getElementById("SelectFile");
 	if(target.selectedIndex == -1){
 		alert("Veuillez selectionner un fichier")
 	}
 	else{
-		//récupère le nom réel du fichier et transmet la demande de récupération.
+		//rï¿½cupï¿½re le nom rï¿½el du fichier et transmet la demande de rï¿½cupï¿½ration.
 		var fileSelected = target.options[target.selectedIndex].value;
 		console.log(fileSelected);
 		window.location.href = 'download_files.php?name='+fileSelected;
 	}
 }
 
-function deleteFile(id){
-	var dtarget = document.getElementById("SelectFile");
-	if(dtarget.selectedIndex == -1){
-		alert("Veuillez selectionner un fichier")
-	}
-	else{
+
+function deleteFile(id,rowIndex,idFile){
+	var dtarget = document.getElementById("table_supprimer");
 		if (confirm("Voulez-vous vraiment supprimer ce fichier ?")){
-			//préparation de l'ajax pour la suppression
+			//prï¿½paration de l'ajax pour la suppression
 			var retourInfos = document.getElementById("retourInfos");
 			if (window.FormData){
 				var fData = new FormData();
 			}
 			else{
-				alert ("FormData non supporté");
+				alert ("FormData non supportï¿½");
 				return;
 			}
 			var varAjax = new XMLHttpRequest();
@@ -474,22 +471,19 @@ function deleteFile(id){
 			varAjax.onreadystatechange = function(event){
 				if(this.readyState == 4){
 					retourInfos.innerHTML += event.target.responseText;
-					dtarget.remove(dtarget.selectedIndex);
+					dtarget.deleteRow(rowIndex);
 				}
 			};
-			
-		
-			//préparation des infos de suppression à transmettre.
-			var fileSelected = dtarget.options[dtarget.selectedIndex].value;
-			fData.append("name", fileSelected);
+
+
+			//prï¿½paration des infos de suppression ï¿½ transmettre.
+			fData.append("idFile", idFile);
 			fData.append("id", id);
-			
+
 			varAjax.send(fData);
-			
 		}
 		else{
 			return;
 		}
-	}
-}
 
+}
