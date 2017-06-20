@@ -1215,27 +1215,27 @@ if ((!empty($id_area)) || (isset($add_area)))
 						<label><input type='radio' name='user_right' value='1' ";
 						if($row['user_right'] == 1)
 							echo "checked";
-			echo " />visiteur</label></br>
+			echo "  />".get_vocab("visu_fiche_description1")."</label></br>
 						<label><input type='radio' name='user_right' value='2'  ";
 						if($row['user_right'] == 2)
 							echo "checked";
-			echo "  />utilisateur</label></br>
+			echo "  />".get_vocab("visu_fiche_description2")."</label></br>
 						<label><input type='radio' name='user_right' value='3'  ";
 						if($row['user_right'] == 3)
 							echo "checked";
-			echo "  />gestionnaire</label></br>
+			echo "  />".get_vocab("visu_fiche_description3")."</label></br>
 						<label><input type='radio' name='user_right' value='4'  ";
 						if($row['user_right'] == 4)
 							echo "checked";
-			echo "  />administrateur restreint</label></br>
+			echo "  />".get_vocab("visu_fiche_description4")."</label></br>
 						<label><input type='radio' name='user_right' value='5'  ";
 						if($row['user_right'] == 5)
 							echo "checked";
-			echo "  />administrateur</label></br>
+			echo "  />".get_vocab("visu_fiche_description5")."</label></br>
 						<label><input type='radio' name='user_right' value='6'  ";
 						if($row['user_right'] == 6)
 							echo "checked";
-			echo "  />personne</label></td>";
+			echo "  />".get_vocab("visu_fiche_description6")."</label></td>";
 			echo "</tr></table>";
 			echo "<div style=\"text-align:center;\">\n";
 			echo "</br>";

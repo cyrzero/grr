@@ -576,8 +576,12 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 
 		// Accorder les droits en fonction du statut de l'utilisateur
 		$droit = authGetUserLevel(getUserName(), $room_id);
+		$res = grr_sql_query("SELECT access_file, user_right FROM ".TABLE_PREFIX."_area WHERE id ='".$area."'");
+		$level = mysqli_fetch_row($res);
+		$access_file = $level[0];
+		$user_right = $level[1];
 		// gestion fichiers joints si l'utilisateur à les droits en plus que la fonctionnalité soit activée
-			if ($id != 0 && $droit>2 && Settings::get('files') == 'y'){
+			if ($id != 0 && $droit>=$user_right && $access_file==0){
 				// récupère la liste des fichiers associé à la réservation.
 				$fRes = grr_sql_query("SELECT id, file_name, public_name from ".TABLE_PREFIX."_files where id_entry = '".$id."'");
 				if (!$fRes){
