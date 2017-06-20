@@ -28,7 +28,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 include "../include/connect.inc.php";
-include "../include/config.inc.php";	
+include "../include/config.inc.php";
 include "../include/misc.inc.php";
 include "../include/functions.inc.php";
 include "../include/$dbsys.inc.php";
@@ -50,7 +50,7 @@ include "../include/language.inc.php";
 //$version_grr = "3.0";
 //~ $version_grr = "3.5";
 //~ $version_grr = "3.5.7.8.3";
-$version_grr = "3.6";
+$version_grr = "3.7";
 
 function traite_requete($requete = "")
 {
@@ -236,65 +236,65 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 					if (isset($_POST['maj']) || isset($_GET['force_maj']))
 					{
 						// On commence la mise à jour
-					
+
 						if ($version_old < "2.2.3")
 						{
 							$result .= "<b>Mise à jour jusqu'à la version 2.2.3 :</b><br />";
-							
+
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_entry ADD `clef` INT(2) NOT NULL DEFAULT '0' AFTER `jours`;");
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_entry ADD `courrier` INT(2) NOT NULL DEFAULT '0' AFTER `clef`;");
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_repeat ADD `courrier` INT(2) NOT NULL DEFAULT '0' AFTER `jours`;");
-							
+
 							$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = 1 WHERE NAME = 'nb_calendar';");
 							$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = 'item' WHERE NAME = 'area_list_format';");
-							
+
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='default_css'");
 							if ($req == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('default_css', 'bleu')");
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = 'bleu' WHERE NAME = 'default_css';");
 							}
-							
+
 							$req2 = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='mail_destinataire'");
 							if ($req2 == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('mail_destinataire', 'votreemail@adresse.xx')");
 							}
-							
+
 							$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('allow_pdf', 'y')");
-							
+
 							if ($result_inter == '')
 								$result .= "<span style=\"color:green;\">Ok !</span><br />";
 							else
 								$result .= $result_inter;
 							$result_inter = '';
 						}
-						
+
 						//maj version 2.4
 						if ($version_old < "2.4")
 						{
 							$result .= "<b>Mise à jour jusqu'à la version 2.4 :</b><br />";
-						
+
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_mail_port';");
 							if ($req == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('grr_mail_port', '25');");
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '25' WHERE NAME = 'grr_mail_port';");
 							}
-							
+
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_mail_encrypt';");
 							if ($req == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('grr_mail_encrypt', '');");
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '' WHERE NAME = 'grr_mail_encrypt';");
 							}
-							
+
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_print_auto';");
 							if ($req == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('grr_print_auto', '1');");
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '1' WHERE NAME = 'grr_print_auto';");
 							}
-						
+
 							if ($result_inter == '')
 								$result .= "<span style=\"color:green;\">Ok !</span><br />";
 							else
@@ -306,14 +306,14 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						//~ {
 							//~ $result .= "<b>Mise à jour jusqu'à la version 2.5 :</b><br />";
 							//~ $result_inter .= traite_requete("Create table if not exists ".TABLE_PREFIX."files(id int not null, id_entry int, file_name varchar(50), public_name varchar(50),Primary key (id), constraint fk_idEntry foreign key (id_entry) references resatest.grr_entry(id));");
-								
+
 							//~ if ($result_inter == '')
 								//~ $result .= "<span style=\"color:green;\">Ok !</span><br />";
 							//~ else
 								//~ $result .= $result_inter;
 							//~ $result_inter = '';
 						//~ }
-						
+
 						//modif_Elodie
 						//maj version 3.6
 						if ($version_old <= "3.5")
@@ -325,21 +325,21 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '25' WHERE NAME = 'grr_mail_port';");
 							}
-							
+
 							//~ $req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_mail_encrypt';");
 							//~ if ($req == -1){
 								//~ $result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('grr_mail_encrypt', '');");
 							//~ }else{
 								//~ $result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '' WHERE NAME = 'grr_mail_encrypt';");
 							//~ }
-							
+
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_print_auto';");
 							if ($req == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('grr_print_auto', '1');");
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '1' WHERE NAME = 'grr_print_auto';");
 							}
-							
+
 							//Rajout du logo sur le site
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='logo';");
 							if ($req == -1){
@@ -347,7 +347,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = 'f68661ceafd7e84ba15ed125a39ff1a2.png' WHERE NAME = 'logo';");
 							}
-							
+
 							//Modification du champ 'company'
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='company';");
 							if ($req == -1){
@@ -355,7 +355,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = 'Mairie de Talmont Saint Hilaire' WHERE NAME = 'company';");
 							}
-							
+
 							//Objet du mail d'envoi automatique via la base de données (ajout du champ grr_mail_object dans la BDD)
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='grr_mail_object';");
 							if ($req == -1){
@@ -363,7 +363,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = 'Demande de réservation' WHERE NAME = 'grr_mail_object';");
 							}
-							
+
 							//Changement du type de la colonne couleur de la table grr_type_area plus remplacement des anciennes valeurs avec un update
 							$tab_couleur[1] = "#F49AC2";
 							$tab_couleur[2] = "#99CCCC";
@@ -395,7 +395,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 							$tab_couleur[28] = "#FFBB20";
 
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_type_area MODIFY couleur CHAR(7)");
-							
+
 							for($i=1; $i<29; $i++) {
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_type_area SET couleur = '".$tab_couleur[$i]."' WHERE couleur = '".$i."'");
 							}
@@ -406,24 +406,43 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 								$result .= $result_inter;
 							$result_inter = '';
 						}
-						
-						if ($version_old <= "3.6"){
-							
+
+					if ($version_old <= "3.6"){
+
 							$result .= "<b>Mise à jour jusqu'à la version 3.6 :</b><br />";
 
 							$result_inter .= traite_requete("Create table if not exists ".TABLE_PREFIX."_files(id int not null auto_increment, id_entry int, file_name varchar(50), public_name varchar(50), Primary key (id), constraint fk_idEntry foreign key (id_entry) references ".TABLE_PREFIX."_entry(id));");
 
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldname VARCHAR(40)");
-							
+
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_overload MODIFY fieldtype VARCHAR(40)");
-							
+
 							$req = grr_sql_query1("SELECT VALUE FROM ".TABLE_PREFIX."_setting WHERE NAME='files';");
 							if ($req == -1){
 								$result_inter .= traite_requete("INSERT INTO ".TABLE_PREFIX."_setting VALUES ('files', '');");
 							}else{
 								$result_inter .= traite_requete("UPDATE ".TABLE_PREFIX."_setting SET VALUE = '' WHERE NAME = 'files';");
-							}	
-													
+							}
+
+							if ($result_inter == '')
+								$result .= "<span style=\"color:green;\">Ok !</span><br />";
+							else
+								$result .= $result_inter;
+							$result_inter = '';
+						}
+
+					if ($version_old <= "3.7"){
+
+							$result .= "<b>Mise à jour jusqu'à la version 3.7 :</b><br />";
+
+							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_area ADD user_right INT(11)");
+
+							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_area ADD access_file INT(1)");
+
+							$result_inter .= traite_requete("DELETE FROM ".TABLE_PREFIX."_setting WHERE NAME='files'");
+
+							$result_inter .= traite_requete("DELETE FROM ".TABLE_PREFIX."_setting WHERE NAME='file'");
+
 							if ($result_inter == '')
 								$result .= "<span style=\"color:green;\">Ok !</span><br />";
 							else
@@ -433,7 +452,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						// Vérification du format des champs additionnels
 						// Avant version 1.9.4, les champs add étaient stockés sous la forme <id_champ>champ_encode_en_base_64</id_champ>
 						// A partir de la version 1.9.4, les champs add. sont stockés sous la forme @id_champ@url_encode(champ)@/id_champ@
-						if (($version_old < "1.9.4") && (Settings::get("maj194_champs_additionnels") != 1) && isset($_POST['maj']))
+					if (($version_old < "1.9.4") && (Settings::get("maj194_champs_additionnels") != 1) && isset($_POST['maj']))
 						{
 	  					// On constuite un tableau des id des ".TABLE_PREFIX."overload:
 							$sql_overload = grr_sql_query("SELECT id FROM ".TABLE_PREFIX."_overload");
@@ -469,7 +488,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						}
 						// Mise à jour du champ "qui_peut_reserver_pour
 						// La version 1.9.6 a introduit un niveau supplémentaire pour le champ qui_peut_reserver_pour, ce qui oblige à un décalage : les niveaux 5 deviennent des niveaux 6
-						if (($version_old < "1.9.6") && (Settings::get("maj196_qui_peut_reserver_pour") != 1) && (isset($_POST['maj']) ))
+					if (($version_old < "1.9.6") && (Settings::get("maj196_qui_peut_reserver_pour") != 1) && (isset($_POST['maj']) ))
 						{
 	   						// On met à jour le champ
 							$up = grr_sql_query("UPDATE ".TABLE_PREFIX."_room set qui_peut_reserver_pour='6' where qui_peut_reserver_pour='5'");
@@ -511,7 +530,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						$display_version_grr = $version_grr.$sous_version_grr;
 					else
 						$display_version_grr = $version_grr."_RC".$version_grr_RC;
-						
+
 					/* 			  AFFICHAGE
 					 * 				 DE
 					 * 				 LA
@@ -519,7 +538,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 					 *    Numéro de version et mise à jour (la page bleue)
 					 * (après avoir efféctué les mises à jours)
 					 */
-					 
+
 					echo "<h2>".get_vocab('admin_maj.php')."</h2>";
 					echo "<hr />";
 					// Numéro de version
@@ -570,7 +589,7 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 						echo "</div>";
 					}
 					// Test de cohérence des types de réservation
-					if ($version_grr > "1.9.1")
+				if ($version_grr > "1.9.1")
 					{
 						$res = grr_sql_query("SELECT DISTINCT type FROM ".TABLE_PREFIX."_entry ORDER BY type");
 						if ($res)

@@ -47,7 +47,7 @@ $ip_adr = isset($_POST["ip_adr"]) ? $_POST["ip_adr"] : NULL;
 $room_name = htmlspecialchars(isset($_POST["room_name"]) ? $_POST["room_name"] : NULL);
 $description = htmlspecialchars(isset($_POST["description"]) ? $_POST["description"] : NULL);
 $capacity = isset($_POST["capacity"]) ? $_POST["capacity"] : NULL;
-$duree_max_resa_area1  = isset($_POST["duree_max_resa_area1"]) ? $_POST["duree_max_resa_area1"] : NULL;
+$duree_max_resa_area1  = isset($_POST["1"]) ? $_POST["duree_max_resa_area1"] : NULL;
 $duree_max_resa_area2  = isset($_POST["duree_max_resa_area2"]) ? $_POST["duree_max_resa_area2"] : NULL;
 $delais_max_resa_room  = isset($_POST["delais_max_resa_room"]) ? $_POST["delais_max_resa_room"] : NULL;
 $delais_min_resa_room  = isset($_POST["delais_min_resa_room"]) ? $_POST["delais_min_resa_room"] : NULL;
@@ -57,6 +57,8 @@ $dont_allow_modify  = isset($_POST["dont_allow_modify"]) ? $_POST["dont_allow_mo
 $qui_peut_reserver_pour  = isset($_POST["qui_peut_reserver_pour"]) ? $_POST["qui_peut_reserver_pour"] : NULL;
 $who_can_see  = isset($_POST["who_can_see"]) ? $_POST["who_can_see"] : NULL;
 $max_booking = isset($_POST["max_booking"]) ? $_POST["max_booking"] : NULL;
+$access_file = isset($_POST["access_file"]) ? $_POST["access_file"] : NULL;
+$user_right = isset($_POST["user_right"]) ? $_POST["user_right"] : NULL;
 settype($max_booking, "integer");
 if ($max_booking<-1)
 	$max_booking = -1;
@@ -749,7 +751,9 @@ if ((!empty($id_area)) || (isset($add_area)))
 				enable_periods = '".protect_data_sql($_POST['enable_periods'])."',
 				twentyfourhour_format_area = '".protect_data_sql($_POST['twentyfourhour_format_area'])."',
 				max_booking='".$max_booking."',
-				display_days = '".$display_days."'
+				display_days = '".$display_days."',
+				user_right = '".$user_right."',
+				access_file = ".$access_file."
 				WHERE id=$id_area";
 				if (grr_sql_command($sql) < 0)
 				{
@@ -1192,7 +1196,49 @@ if ((!empty($id_area)) || (isset($add_area)))
 			echo "<tr><td>".get_vocab("max_booking")." -  ".get_vocab("all_rooms_of_area").get_vocab("deux_points");
 			echo "</td><td><input class=\"form-control\" type=\"text\" name=\"max_booking\" value=\"".$row['max_booking']."\" /></td>\n";
 			echo "</tr></table>";
+			echo "<h3>".get_vocab('ajout_fichier_joint')."</h3>";
+			echo "<table style='width:100%' border='1' cellspacing='1' cellpadding='6' ><tr>";
+			echo "<td>Ajout de fichier(s) joint aux ressources</td>";
+			echo "<td style='width:30%'>
+						<label><input type='radio' name='access_file' value='0'  ";
+						if($row['access_file'] == 0)
+							echo "checked";
+			echo "  />Oui</label><br/>
+						<label><input type='radio' name='access_file' value='1'  ";
+						if($row['access_file'] == 1)
+							echo "checked";
+			echo "  />Non</label></td>";
+			echo "</tr>";
+			echo "<tr>";
+			echo "<td>Droit pour ajouter les fichiers</td>";
+			echo "<td style='width'>
+						<label><input type='radio' name='user_right' value='1' ";
+						if($row['user_right'] == 1)
+							echo "checked";
+			echo " />visiteur</label></br>
+						<label><input type='radio' name='user_right' value='2'  ";
+						if($row['user_right'] == 2)
+							echo "checked";
+			echo "  />utilisateur</label></br>
+						<label><input type='radio' name='user_right' value='3'  ";
+						if($row['user_right'] == 3)
+							echo "checked";
+			echo "  />gestionnaire</label></br>
+						<label><input type='radio' name='user_right' value='4'  ";
+						if($row['user_right'] == 4)
+							echo "checked";
+			echo "  />administrateur restreint</label></br>
+						<label><input type='radio' name='user_right' value='5'  ";
+						if($row['user_right'] == 5)
+							echo "checked";
+			echo "  />administrateur</label></br>
+						<label><input type='radio' name='user_right' value='6'  ";
+						if($row['user_right'] == 6)
+							echo "checked";
+			echo "  />personne</label></td>";
+			echo "</tr></table>";
 			echo "<div style=\"text-align:center;\">\n";
+			echo "</br>";
 			echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_area\" value=\"".get_vocab("save")."\" />\n";
 			echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_done\" value=\"".get_vocab("back")."\" />\n";
 			echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_area_and_back\" value=\"".get_vocab("save_and_back")."\" />";
