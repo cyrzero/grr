@@ -216,6 +216,7 @@ $vocab['code_fonction'] = "Identifiant du profil LDAP";
 $vocab['company'] = "Mairie de Talmont Saint Hilaire";
 $vocab['configuration_liens_adresses'] = "Configuration des liens email";
 $vocab['configuration_plages_horaires'] = "Configuration de l'affichage des plannings des ressources de ce domaine";
+$vocab['ajout_fichier_joint'] = "Configuration de l'ajout de fichier aux ressources";
 $vocab['configuration_ressource'] = "Configuration des fonctionnalités";
 $vocab['Configurer la ressource'] = "Configurer la ressource";
 $vocab['config_cas_title'] = "Prise en compte d'un environnement CAS (SSO)";

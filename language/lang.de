@@ -223,6 +223,7 @@ $vocab['code_fonction'] = "Identifiant du profil LDAP"; // A traduire
 $vocab['company'] = "Name der Einrichtung ";
 $vocab['configuration_liens_adresses'] = "Configuration des liens email"; // A traduire
 $vocab['configuration_plages_horaires'] = "Anpassen der Zeitangabe";
+$vocab['ajout_fichier_joint'] = "Gestalt des Zusatzes von Datei in den Mitteln";
 $vocab['configuration_ressource'] = "Configuration des fonctionnalités"; // A traduire
 $vocab['Configurer la ressource'] = "Ressource konfigurieren";
 $vocab['config_cas_title'] = "Berücksichtigung eines CAS (SSO) Systems";
