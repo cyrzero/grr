@@ -439,6 +439,8 @@ if ((!@grr_resumeSession()) && $valid!='yes')
 
 							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_area ADD access_file INT(1)");
 
+							$result_inter .= traite_requete("ALTER TABLE ".TABLE_PREFIX."_area ADD upload_file INT(11)");
+
 							$result_inter .= traite_requete("DELETE FROM ".TABLE_PREFIX."_setting WHERE NAME='files'");
 
 							$result_inter .= traite_requete("DELETE FROM ".TABLE_PREFIX."_setting WHERE NAME='file'");

@@ -576,10 +576,11 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 
 		// Accorder les droits en fonction du statut de l'utilisateur
 		$droit = authGetUserLevel(getUserName(), $room_id);
-		$res = grr_sql_query("SELECT access_file, user_right FROM ".TABLE_PREFIX."_area WHERE id ='".$area."'");
+		$res = grr_sql_query("SELECT access_file, user_right, upload_file FROM ".TABLE_PREFIX."_area WHERE id ='".$area."'");
 		$level = mysqli_fetch_row($res);
 		$access_file = $level[0];
 		$user_right = $level[1];
+		$upload_file = $level[2];
 		// gestion fichiers joints si l'utilisateur à les droits en plus que la fonctionnalité soit activée
 			if ($id != 0 && $droit>=$user_right && $access_file==0){
 				// récupère la liste des fichiers associé à la réservation.
@@ -588,11 +589,11 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 					fatal_error(0, grr_sql_error());
 				}
 				//~ $selectedfile = "Ahah ça marche pas";
+				if ($droit>=$upload_file) {
 				echo '<div class="upload">
 
 					<!-- <form id="uploadForm" method="post" action="upload.php?id=',$id,'&amp;selectedfile=',$selectedfile,'" enctype="multipart/form-data"> -->
 					<form id="uploadForm" method="post" action="upload.php?id=',$id,'" enctype="multipart/form-data">
-
 					<h4 style="font-weight:bold">Choisissez le fichier que vous allez insérer dans cette réservation : <br></h4>
 						<!--
 						<input type="file" id="hiddenfile" name="myFiles[]" onChange="getvalue();"/>
@@ -610,6 +611,7 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 					<output id=infos> </output>
 
 				</div>';
+				}
 
 				echo '<script type="text/javascript" >
 

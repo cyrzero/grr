@@ -59,6 +59,7 @@ $who_can_see  = isset($_POST["who_can_see"]) ? $_POST["who_can_see"] : NULL;
 $max_booking = isset($_POST["max_booking"]) ? $_POST["max_booking"] : NULL;
 $access_file = isset($_POST["access_file"]) ? $_POST["access_file"] : NULL;
 $user_right = isset($_POST["user_right"]) ? $_POST["user_right"] : NULL;
+$upload_file = isset($_POST["upload_file"]) ? $_POST["upload_file"] : NULL;
 settype($max_booking, "integer");
 if ($max_booking<-1)
 	$max_booking = -1;
@@ -753,7 +754,8 @@ if ((!empty($id_area)) || (isset($add_area)))
 				max_booking='".$max_booking."',
 				display_days = '".$display_days."',
 				user_right = '".$user_right."',
-				access_file = ".$access_file."
+				access_file = ".$access_file.",
+				upload_file = ".$upload_file."
 				WHERE id=$id_area";
 				if (grr_sql_command($sql) < 0)
 				{
@@ -1234,6 +1236,34 @@ if ((!empty($id_area)) || (isset($add_area)))
 			echo "  />".get_vocab("visu_fiche_description5")."</label></br>
 						<label><input type='radio' name='user_right' value='6'  ";
 						if($row['user_right'] == 6)
+							echo "checked";
+			echo "  />".get_vocab("visu_fiche_description6")."</label></td>";
+			echo "</tr>";
+			echo "<tr>";
+			echo "<td>Droit pour uploader les fichiers</td>";
+			echo "<td style='width'>
+						<label><input type='radio' name='upload_file' value='1' ";
+						if($row['upload_file'] == 1)
+							echo "checked";
+			echo "  />".get_vocab("visu_fiche_description1")."</label></br>
+						<label><input type='radio' name='upload_file' value='2'  ";
+						if($row['upload_file'] == 2)
+							echo "checked";
+			echo "  />".get_vocab("visu_fiche_description2")."</label></br>
+						<label><input type='radio' name='upload_file' value='3'  ";
+						if($row['upload_file'] == 3)
+							echo "checked";
+			echo "  />".get_vocab("visu_fiche_description3")."</label></br>
+						<label><input type='radio' name='upload_file' value='4'  ";
+						if($row['upload_file'] == 4)
+							echo "checked";
+			echo "  />".get_vocab("visu_fiche_description4")."</label></br>
+						<label><input type='radio' name='upload_file' value='5'  ";
+						if($row['upload_file'] == 5)
+							echo "checked";
+			echo "  />".get_vocab("visu_fiche_description5")."</label></br>
+						<label><input type='radio' name='upload_file' value='6'  ";
+						if($row['upload_file'] == 6)
 							echo "checked";
 			echo "  />".get_vocab("visu_fiche_description6")."</label></td>";
 			echo "</tr></table>";
