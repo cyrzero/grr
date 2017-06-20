@@ -637,7 +637,7 @@ echo '<fieldset><legend style="font-size:12pt;font-weight:bold">'.get_vocab('ent
 					//rempli la liste avec les fichiers récupérés
 					while ($fRow = mysqli_fetch_row($fRes)){
 					echo "<tr style='border: 1px solid grey;'>
-									<td><a href=./uploadedFiles/$fRow[1] download='$fRow[2]'>$fRow[2]</a></td>
+									<td style='text-align:center'><a href=./uploadedFiles/$fRow[1] download='$fRow[2]'>$fRow[2]</a></td>
 									<td><img src='images/croix.jpeg' alt='icone_supprimer' onclick='deleteFile($id,this.parentNode.parentNode.rowIndex,$fRow[0])' /></td>
 								</tr>";
 						//echo '<option value="'.$fRow[0].'">'.$fRow[1].'</option>';
