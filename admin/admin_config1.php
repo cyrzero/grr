@@ -1292,32 +1292,6 @@ echo '</td>'.PHP_EOL;
 echo '</tr>'.PHP_EOL;
 echo '</table>'.PHP_EOL;
 
-		# Gestion des fichiers
-
-echo '<hr />'.PHP_EOL;
-echo '<h3>'.get_vocab('files').'</h3>'.PHP_EOL;
-echo '<table>'.PHP_EOL;
-echo '<tr>'.PHP_EOL;
-echo '<td>'.get_vocab('activate').'</td>'.PHP_EOL;
-echo '<td>'.PHP_EOL;
-echo "<input type='radio' name='files' value='y' ";
-if (Settings::get('files') == 'y') {
-    echo 'checked="checked"';
-}
-echo ' />'.PHP_EOL;
-echo '</td>'.PHP_EOL;
-echo '</tr>'.PHP_EOL;
-echo '<tr>'.PHP_EOL;
-echo '<td>'.get_vocab('not_activate').'</td>'.PHP_EOL;
-echo '<td>'.PHP_EOL;
-echo "<input type='radio' name='files' value='n' ";
-if (Settings::get('files') == 'n') {
-    echo 'checked="checked"';
-}
-echo ' />'.PHP_EOL;
-echo '</td>'.PHP_EOL;
-echo '</tr>'.PHP_EOL;
-echo '</table>'.PHP_EOL;
 # Afficher vacance et jour ferie
 echo '<hr />'.PHP_EOL;
 echo '<h3>'.get_vocab('holidays_msg').'</h3>'.PHP_EOL;

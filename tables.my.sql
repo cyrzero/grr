@@ -119,6 +119,5 @@ INSERT INTO grr_setting VALUES ('envoyer_email_avec_formulaire', 'no');
 INSERT INTO grr_setting VALUES ('mail_destinataire', 'test@test.fr');
 INSERT INTO grr_setting VALUES ('mail_etat_destinataire', '0');
 INSERT INTO grr_setting VALUES ('menu_gauche', '1');
-INSERT INTO grr_setting VALUES ('file', '1');
 INSERT INTO grr_setting VALUES ('logo','f68661ceafd7e84ba15ed125a39ff1a2.png');
 INSERT INTO grr_setting VALUES ('grr_mail_object','Demande de réservation');
