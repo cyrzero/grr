@@ -1212,7 +1212,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 			echo "  />Non</label></td>";
 			echo "</tr>";
 			echo "<tr>";
-			echo "<td>Droit pour ajouter les fichiers</td>";
+			echo "<td>Droit pour voir les fichiers</td>";
 			echo "<td style='width'>
 						<label><input type='radio' name='user_right' value='1' ";
 						if($row['user_right'] == 1)
