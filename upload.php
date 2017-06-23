@@ -3,8 +3,8 @@
  * Author : Cédric Berthomé
  * Date : 06/2015
  * Gère l'enregisrement de fichier sur le serveur et référencement dans la base de donnée.
- *
- */
+ * 
+ */ 
 include "include/connect.inc.php";
 include "include/config.inc.php";
 include "include/misc.inc.php";
@@ -49,7 +49,7 @@ if (isset ($_FILES) && is_array($_FILES)){
 				else{
 					if ($copie){
 						echo "<br> <span style='color:green'>Fichier enregistré</span></p>";
-						header('Location: ' . $_SERVER['HTTP_REFERER'] );
+						header('Location: week_all.php?');
 					}
 					else{
 						echo "<br><span style='color:red'>Erreur d'enregistrement</span></p>";
@@ -59,7 +59,7 @@ if (isset ($_FILES) && is_array($_FILES)){
 			else{
 				echo "<br><span style='color:red'>Erreur, le fichier n'a pu être renommé</span></p>";
 			}
-
+			
 		}
 	}
 	else{
