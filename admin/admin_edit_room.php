@@ -47,7 +47,7 @@ $ip_adr = isset($_POST["ip_adr"]) ? $_POST["ip_adr"] : NULL;
 $room_name = htmlspecialchars(isset($_POST["room_name"]) ? $_POST["room_name"] : NULL);
 $description = htmlspecialchars(isset($_POST["description"]) ? $_POST["description"] : NULL);
 $capacity = isset($_POST["capacity"]) ? $_POST["capacity"] : NULL;
-$duree_max_resa_area1  = isset($_POST["1"]) ? $_POST["duree_max_resa_area1"] : NULL;
+$duree_max_resa_area1  = isset($_POST["duree_max_resa_area1"]) ? $_POST["duree_max_resa_area1"] : NULL;
 $duree_max_resa_area2  = isset($_POST["duree_max_resa_area2"]) ? $_POST["duree_max_resa_area2"] : NULL;
 $delais_max_resa_room  = isset($_POST["delais_max_resa_room"]) ? $_POST["delais_max_resa_room"] : NULL;
 $delais_min_resa_room  = isset($_POST["delais_min_resa_room"]) ? $_POST["delais_min_resa_room"] : NULL;
@@ -1235,7 +1235,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 							echo "checked";
 			echo "  />".get_vocab("visu_fiche_description5")."</label></br>
 						<label><input type='radio' name='user_right' value='6'  ";
-						if($row['user_right'] == 6)
+						if($row['user_right'] == 6 || $row['user_right'] == null)
 							echo "checked";
 			echo "  />".get_vocab("visu_fiche_description6")."</label></td>";
 			echo "</tr>";
@@ -1263,7 +1263,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 							echo "checked";
 			echo "  />".get_vocab("visu_fiche_description5")."</label></br>
 						<label><input type='radio' name='upload_file' value='6'  ";
-						if($row['upload_file'] == 6)
+						if($row['upload_file'] == 6 || $row['upload_file'] == null)
 							echo "checked";
 			echo "  />".get_vocab("visu_fiche_description6")."</label></td>";
 			echo "</tr></table>";
