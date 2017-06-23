@@ -26,3 +26,9 @@
 * Sauvegarde de la lettre sur le serveur - 0%
 
 * Passage en GPL V3 au fur et a mesure des modifications de fichier
+
+# Projet à continuer
+* Finir le remplacement du calendrier - 30%
+* Régler le probleme du clockpicker - 0%
+* Permettre au gestionnaire de domaine de gerer les couleurs des type - 0%
+* Continuer l'ajout de contraintes pour l'ajout de fichier - 0%
