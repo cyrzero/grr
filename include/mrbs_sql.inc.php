@@ -2,35 +2,17 @@
 /**
  * mrbs_sql.inc.php
  * Bibliothèque de fonctions propres à l'application GRR
- *
- * Dernière modification : $Date: 2010-01-06 10:21:20 $
- *
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @author    Marc-Henri PAMISEUX <marcori@users.sourceforge.net>
- * @copyright Copyright 2003-2005 Laurent Delineau
- * @copyright Copyright 2008 Marc-Henri PAMISEUX
+ * Dernière modification : $Date: 2018-10-24 10:40$
+ * @author    JeromeB & Laurent Delineau & Marc-Henri PAMISEUX & Yan Naessens
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   include
- * @version   $Id: mrbs_sql.inc.php,v 1.16 2010-01-06 10:21:20 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
- * D'après http://mrbs.sourceforge.net/
  *
  * GRR is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
  */
 /** mrbsCheckFree()
  *
@@ -44,7 +26,7 @@
  *
  * Returns:
  *   nothing   - The area is free
- *   something - An error occured, the return value is human readable
+ *   something - An error occurred, the return value is human readable
  */
 function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 {
@@ -74,10 +56,10 @@ function mrbsCheckFree($room_id, $starttime, $endtime, $ignore, $repignore)
 		$param_ym = "area=$area&amp;year=$starts[year]&amp;month=$starts[mon]";
 		$param_ymd = $param_ym . "&amp;day=$starts[mday]";
 		$err .= "<li><a href=\"view_entry.php?id=$row[0]\">$row[1]</a>"
-		. " ( " . strftime('%A %d %B %Y %T', $row[2]) . ") "
+		. " ( " . utf8_strftime('%A %d %B %Y %T', $row[2]) . ") "
 		. "(<a href=\"day.php?$param_ymd\">".get_vocab("viewday")."</a>"
 			. " | <a href=\"week.php?room=$room_id&amp;$param_ymd\">".get_vocab("viewweek")."</a>"
-			. " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)\n";
+			. " | <a href=\"month.php?room=$room_id&amp;$param_ym\">".get_vocab("viewmonth")."</a>)</li>\n";
 }
 return $err;
 }
@@ -156,7 +138,7 @@ function grrDelEntryInConflict($room_id, $starttime, $endtime, $ignore, $repigno
  * $all    - If set, include user modified entrys in the series delete
  *
  * Returns:
- *   0        - An error occured
+ *   0        - An error occurred
  *   non-zero - The entry was deleted
  * @param integer $all
  */
@@ -325,7 +307,7 @@ function mrbsEntryGetOverloadDesc($id_entry)
 			$traitement2 = true;
 			while (($traitement1 !== false) || ($traitement2 !== false))
 			{
-				// le premier traitement cherche la prochaine occurence de $begin_string et retourne la portion de chaine après cette occurence
+				// le premier traitement cherche la prochaine occurrence de $begin_string et retourne la portion de chaine après cette occurrence
 				if ($traitement1 != false)
 				{
 					$chaine1 = strstr ($chaine, $begin_string);
@@ -361,7 +343,7 @@ function mrbsEntryGetOverloadDesc($id_entry)
 						else
 							break;
 					}
-					//a ce niveau, $ind_old est la dernière occurence de $end_string trouvée dans $chaine
+					//a ce niveau, $ind_old est la dernière occurrence de $end_string trouvée dans $chaine
 					if ($ind != 0 )
 					{
 						$chaine = substr($chaine,0,$ind_old);
@@ -520,15 +502,29 @@ function same_day_next_month($time)
 	else
 		return 28;
 }
-
+/** get_day_of_month
+ *  renvoie le time stamp du ($rep_month_abs1)-ème jour de nom ($rep_month_abs2)
+ *  dans le mois suivant le jour de timestamp $time
+ *  renvoie un tableau [$valide,$temps] 
+ *  où $valide est un booléen indiquant si $temps est un timestamp accepté
+ */
 function get_day_of_month($time, $rep_month_abs1, $rep_month_abs2)
 {
-	$days = array('monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-	$rep = array('first', 'second', 'third', 'fourth', 'five', 'last');
-	$time = strtotime('+1 month', $time);
-	$str = $rep[$rep_month_abs1].' '.$days[$rep_month_abs2 - 1].' of '.date("F", $time).' '.date("Y", $time);
-	return strtotime($str);
-
+	$days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+	$rep = array('first', 'second', 'third', 'fourth', 'fifth', 'last');
+    $time = mktime(0,0,0,date("m",$time)+1,1,date("Y",$time)); // avance d'un mois
+    if (in_array($rep_month_abs1,[0,1,2,3,5])){
+        $str = $rep[$rep_month_abs1].' '.$days[$rep_month_abs2 - 1].' of '.date("F", $time).' '.date("Y", $time);
+        return [TRUE,strtotime($str)];
+    }
+    if ($rep_month_abs1 == 4){
+        $str = $rep[4].' '.$days[$rep_month_abs2 - 1].' of '.date("F", $time).' '.date("Y", $time);
+        $cinq = strtotime($str,$time);
+        $str = 'last '.$days[$rep_month_abs2 - 1].' of '.date("F", $time).' '.date("Y", $time);
+        $last = strtotime($str,$time);
+        if ($cinq == $last) return [TRUE,$cinq];
+        else return [FALSE,$last];
+    }
 }
 /** mrbsGetRepeatEntryList
  *
@@ -539,7 +535,9 @@ function get_day_of_month($time, $rep_month_abs1, $rep_month_abs2)
  * $rep_type - What type of repeat is it
  * $rep_opt  - The repeat entrys
  * $max_ittr - After going through this many entrys assume an error has occured
- * *$rep_jour_c - Le jour cycle d'une réservation, si aucun 0
+ * $rep_jour_c - Le jour cycle d'une réservation, si aucun 0
+ * $area     - Le domaine de réservation (pour contrôler la date de fin)
+ * $rep_month_abs1, $rep_month_abs2 - X, Y dans le mode "X Y du mois"
  *
  * Returns:
  *   empty     - The entry does not repeat
@@ -553,16 +551,17 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 	$day   = date("d", $time);
 	$month = date("m", $time);
 	$year  = date("Y", $time);
-	$entrys = "";
-	$entrys_return = "";
+	$entrys = array();
+	$entrys_return = array();
 	$k = 0;
+    $valide = TRUE;
 	for($i = 0; $i < $max_ittr; $i++)
 	{
 		$time = mktime($hour, $min, $sec, $month, $day, $year);
 		if ($time > $enddate)
 			break;
 		$time2 = mktime(0, 0, 0, $month, $day, $year);
-		if (!(est_hors_reservation($time2,$area)))
+		if ($valide && !(est_hors_reservation($time2,$area)))
 		{
 			$entrys_return[$k] = $time;
 			$k++;
@@ -592,8 +591,10 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 			break;
 			//Monthly repeat on same week number and day of week
 			case 5:
-			$day += same_day_next_month($time);
-			break;
+			//$day += same_day_next_month($time);
+            $num_jour = date("N",$time); // numéro du jour dans la semaine
+            $num_week = (int)((date("j",$time) - 1) / 7); // décalage voulu
+            return mrbsGetRepeatEntryList($time, $enddate, 7, $rep_opt, $max_ittr, $rep_num_weeks, $rep_jour_c, $area, $num_week, $num_jour);
 			//Si la périodicité est par Jours/Cycle
 			case 6:
 			$sql = "SELECT * FROM ".TABLE_PREFIX."_calendrier_jours_cycle WHERE DAY >= '".$time2."' AND DAY <= '".$enddate."' AND Jours = '".$rep_jour_c."'";
@@ -609,10 +610,16 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
 				$kk++;
 			}
 			return $tableFinale;
+            // X Y du mois
 			case 7:
-			$your_date = get_day_of_month($time, $rep_month_abs1, $rep_month_abs2);
+		/*	$your_date = get_day_of_month($time, $rep_month_abs1, $rep_month_abs2);
 			$datediff = $your_date - $time;
-			$day += floor($datediff / (60 * 60 * 24)) + 1;
+			$day += floor($datediff / (60 * 60 * 24)) + 1; */
+            $ans = get_day_of_month($time, $rep_month_abs1, $rep_month_abs2);
+            $valide = $ans[0];
+            $day = date("d",$ans[1]);
+            $month = date("m",$ans[1]);
+            $year = date("Y",$ans[1]);
 			break;
 			//Unknown repeat option
 			default:
@@ -637,6 +644,7 @@ function mrbsGetRepeatEntryList($time, $enddate, $rep_type, $rep_opt, $max_ittr,
  * $type        - Type (Internal/External)
  * $description - Description
  * $rep_jour_c - Le jour cycle d'une réservation, si aucun 0
+ * $rep_month_abs1, $rep_month_abs2 - X, Y dans le mode "X Y du mois"
  *
  * Returns:
  *   0        - An error occured while inserting the entry
@@ -691,7 +699,9 @@ function mrbsGetEntryInfo($id)
 	$res = grr_sql_query($sql);
 	if (!$res)
 		return;
-	$ret = '';
+
+	$ret = array();
+
 	if (grr_sql_count($res) > 0)
 	{
 		$row = grr_sql_row($res, 0);
@@ -826,7 +836,7 @@ function moderate_entry_do($_id,$_moderate,$_description,$send_mail="yes")
 		}
 		else
 		{
-			// On sélectionne toutes les réservation de la périodicité
+			// On sélectionne toutes les réservations de la périodicité
 			$res = grr_sql_query("SELECT id FROM ".TABLE_PREFIX."_entry WHERE repeat_id='".$repeat_id."'");
 			if (! $res)
 				fatal_error(0, grr_sql_error());
@@ -841,7 +851,7 @@ function moderate_entry_do($_id,$_moderate,$_description,$send_mail="yes")
 			}
 			// On supprime l'info de périodicité
 			grr_sql_query("DELETE FROM ".TABLE_PREFIX."_repeat WHERE id='".$repeat_id."'");
-			grr_sql_query("UPDATE ".TABLE_PREFIX."_entry SET repead_id = '0' WHERE repead_id='".$repeat_id."'");
+			grr_sql_query("UPDATE ".TABLE_PREFIX."_entry SET repeat_id = '0' WHERE repeat_id='".$repeat_id."'");
 		}
 	}
 }

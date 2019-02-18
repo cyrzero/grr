@@ -1,4 +1,20 @@
 <?php
+/**
+ * contactFormulaire.php
+ * Formulaire d'envoi de mail
+ * Ce script fait partie de l'application GRR
+ * Dernière modification : $Date: 2017-12-16 14:00$
+ * @author    JeromeB
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
+ * @link      http://www.gnu.org/licenses/licenses.html
+ *
+ * This file is part of GRR.
+ *
+ * GRR is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ */
 include "include/connect.inc.php";
 include "include/config.inc.php";
 include "include/misc.inc.php";
@@ -14,47 +30,50 @@ require_once("./include/session.inc.php");
 include "include/resume_session.php";
 include "include/language.inc.php";
 ?>
-<script type="text/javascript" src="js/functions.js"></script>
+
 <?php
-if ((Settings::get("authentification_obli") == 0) && (getUserName() == ''))
-	$type_session = "no_session";
-print_header("", "", "", $type="with_session");
+
+$type_session = "no_session";
+print_header("", "", "", $type="no_session");
 bouton_retour_haut();
-bouton_aller_bas();
+
 ?>
 	<script>
-
+	
 		function remplirdureemin(res)
 		  { 
 		  
-			frmContact.dureemin.options.length = 0;
-			frmContact.debdureemin.options.length = 0;
-			resmin = res/60;
-			nbiteration = 60/resmin;
-			
-			var y= document.getElementById("debdureemin");
-			var x = document.getElementById("dureemin");
-			valeur = 0;
-
-			for (i=0;i<nbiteration;i++){
-				frmContact.dureemin.options[i] = document.createElement("option");
-				frmContact.debdureemin.options[i] = document.createElement("option");
+				frmContact.dureemin.options.length = 0;
+				frmContact.debdureemin.options.length = 0;
+				resmin = res/60;
+				nbiteration = 60/resmin;
 				
-				if(i==0){
-					valeur = 00;
-				}else{
-					valeur = valeur + resmin;
-				}
-					frmContact.dureemin.options[i].text = valeur +" min";
-					frmContact.dureemin.options[i].value = valeur;
-					x.add(frmContact.dureemin.options[i]);
+				var y= document.getElementById("debdureemin");
+				var x = document.getElementById("dureemin");
+				valeur = 0;
 				
-					frmContact.debdureemin.options[i].text = valeur +" min";
-					frmContact.debdureemin.options[i].value = valeur;
-					y.add(frmContact.debdureemin.options[i]);
-				}
-			frmContact.dureemin.options.selectedIndex = 0;
-		}
+				for (i=0;i<nbiteration;i++){
+					frmContact.dureemin.options[i] = document.createElement("option");
+					frmContact.debdureemin.options[i] = document.createElement("option");
+					
+					if(i==0){
+						valeur = 00;
+					}else{
+						valeur = valeur + resmin;
+					}
+					
+						frmContact.dureemin.options[i].text = valeur +" min";
+						frmContact.dureemin.options[i].value = valeur;
+						x.add(frmContact.dureemin.options[i]);
+					
+						frmContact.debdureemin.options[i].text = valeur +" min";
+						frmContact.debdureemin.options[i].value = valeur;
+						y.add(frmContact.debdureemin.options[i]);
+					
+					}
+		
+				frmContact.dureemin.options.selectedIndex = 0;
+			}
 	</script>
 	
 	
@@ -66,8 +85,9 @@ bouton_aller_bas();
 			<fieldset>
 				
 				<legend><b>Vos coordonnées</b></legend>
-					
-				<div class="col-lg-6 col-md-6 col-xs-6">
+
+
+				<div class="col-lg-6 col-md-6 col-xs-12">
 					
 					<div class="form-group">
 						<div class="input-group">
@@ -84,19 +104,18 @@ bouton_aller_bas();
 					</div>
 					
 				</div>
-
-				<div class="col-lg-6 col-md-6 col-xs-6">
+				<div class="col-lg-6 col-md-6 col-xs-12">
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></div>
-							<input class="form-control" type="email" id="email" size="8" name="email" placeholder="Votre adresse de courriel" required />
+							<input class="form-control" type="text" id="email" size="8" name="email" placeholder="Votre adresse de courriel" required />
 						</div>
 					</div>
 					
 					<div class="form-group">
 						<div class="input-group">
 							<div class="input-group-addon"><span class="glyphicon glyphicon-earphone"></span></div>
-							<input class="form-control" type="tel" size="8" maxlength="14" id="telephone" name="telephone" placeholder="Votre numéro de téléphone" required />
+							<input class="form-control" type="text" size="8" maxlength="14" id="telephone" name="telephone" placeholder="Votre numéro de téléphone" />
 						</div>
 					</div>
 				</div>
@@ -109,32 +128,19 @@ bouton_aller_bas();
 				<fieldset>
 					<legend><b>Réservation</b></legend>
 					<label for="subject">Sujet :</label>
-					<textarea class="form-control" id="subject" name="sujet" cols="30" rows="4" required></textarea><br/>
+					<textarea class="form-control" id="subject" name="sujet" cols="30" rows="4"></textarea><br/>
 					
 					
 					
 						<label>Domaines : </label>
-
-						<script>
-						function getSelectValueArea(){
-							var selectElmt = document.getElementById("area");
-							return selectElmt.options[selectElmt.selectedIndex].value;
-						}
-						function getSelectValueRoom(){
-							var selectElmt = document.getElementById("room");
-							return selectElmt.options[selectElmt.selectedIndex].value;
-						}
-						
-						
-						</script>
-
 						<select id="area" name="area" class="form-control" required>
-							<option value="">SELECTIONNEZ UN DOMAINE </option>
+							<option>SELECTIONNER UN DOMAINE </option>
 							<?php
 							$sql_areaName = "SELECT id, area_name,resolution_area FROM ".TABLE_PREFIX."_area ORDER BY area_name";
 							$res_areaName = grr_sql_query($sql_areaName);
 							for ($i = 0; ($row_areaName = grr_sql_row($res_areaName, $i)); $i++)
 							{
+
 								if (authUserAccesArea(getUserName(),$row_areaName[0]) == 1)
 								{
 									$id = $row_areaName[0];
@@ -146,9 +152,10 @@ bouton_aller_bas();
 							
 							?>
 						</select>
-						<!-- modif Clement Talledec 
-						Selection des données situé dans le fichier frmcontactlist.php qui renvoit en fonction de l'id la valeur du room area -->
-
+						
+							
+						
+						
 						<script>
 							$(document).ready(function()
 							{
@@ -175,8 +182,7 @@ bouton_aller_bas();
 											},
 											success: function(returnData)
 											{
-												$('#room').html(returnData);
-												return(resolution);
+												$("#room").html(returnData);
 											},
 											error: function(returnData)
 											{
@@ -184,149 +190,64 @@ bouton_aller_bas();
 											}
 										});
 									}
-									else{
-										clearOptions('room');
-									}
 								});
 							});
 						</script>
 
 						<label>Ressources : </label>
-
 						<select id="room" name="room" class="form-control" required>
 							<optgroup label="Salles">
-								<option>SELECTIONNEZ UNE RESSOURCE </option>
+								<option>SELECTIONNER UN DOMAINE </option>
 							</select>
-							<!-- modif  Chauvin Jérémy-->
-						<script>
-							//recupére id de l'area(domaine) selectionné ainsi que la room(ressource)
-							getSelectValueArea();
-							getSelectValueRoom();
-						function fct() {
-							var idarea = getSelectValueArea();
-							var idRoom = getSelectValueRoom();
-							//alert(area); // afficher ID
-							document.location.href="contactFormulaire.php?area="+idarea+"&nameRoom="+idRoom;
-							
-						}
-						</script>
-						<?php
-						//modif  Chauvin Jérémy
-						
-						/*if (isset($_GET['valider'])) { 
-							// Récupération de la variable 
-							$nb = $_GET['area']; // La variable est récupéré à partir de l'url
-						}*/
-						
-						//modif_Elodie
-						//$idArea = isset($_GET["area"]) ? $_GET["area"] : NULL;
-						//$id_room = isset($_GET["nameRoom"]) ? $_GET["nameRoom"] : NULL;
-						
-						$idArea = $_GET['area'];
-						//addslashes sur le nameRoom car contient apostrophe
-						$id_room = addslashes($_GET['nameRoom']);
-						if($idArea != ""){
-								$overload_fields = overloadWithRoom($idArea,$id_room);
-							foreach ($overload_fields as $fieldname=>$fieldtype)
-							{
-								if ($overload_fields[$fieldname]["obligatoire"] == "y")
-									$flag_obli = " *" ;
-								else
-									$flag_obli = "";
-								echo "<table width=\"100%\" id=\"id_".$areas."_".$overload_fields[$fieldname]["id"]."\">";
-								echo "<tr><td class=E><b>".removeMailUnicode($fieldname).$flag_obli."</b></td></tr>\n";
-								if (isset($overload_data[$fieldname]["valeur"]))
-									$data = $overload_data[$fieldname]["valeur"];
-								else
-									$data = "";
-								if ($overload_fields[$fieldname]["type"] == "textarea" )
-									echo "<tr><td><div class=\"col-xs-12\"><textarea class=\"form-control\" cols=\"80\" rows=\"2\" name=\"addon_".$overload_fields[$fieldname]["id"]."\">".htmlspecialchars($data)."</textarea></div></td></tr>\n";
-								else if ($overload_fields[$fieldname]["type"] == "text" )
-									echo "<tr><td><div class=\"col-xs-12\"><input class=\"form-control\" size=\"80\" type=\"text\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" value=\"".htmlspecialchars($data)."\" /></div></td></tr>\n";
-								else if ($overload_fields[$fieldname]["type"] == "numeric" )
-									echo "<tr><td><div class=\"col-xs-12\"><input class=\"form-control\" size=\"20\" type=\"text\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" value=\"".htmlspecialchars($data)."\" /></div></td></tr>\n";
-								else
-								{
-									echo "<tr><td><div class=\"col-xs-12\"><select class=\"form-control\" name=\"addon_".$overload_fields[$fieldname]["id"]."\" size=\"1\">\n";
-									if ($overload_fields[$fieldname]["obligatoire"] == 'y')
-										echo '<option value="">'.get_vocab('choose').'</option>';
-									foreach ($overload_fields[$fieldname]["list"] as $value)
-									{
-										echo "<option ";
-										if (htmlspecialchars($data) == trim($value,"&") || ($data == "" && $value[0]=="&"))
-											echo " selected=\"selected\"";
-										echo ">".trim($value,"&")."</option>\n";
-									}
-									echo "</select></div>\n</td></tr>\n";
-								}
-								echo "</table>\n";
-							}
-						}
-						//fin ici
-						?>
 				</fieldset>
 				
 		</div>
 				
 				
 		<div class="row">	
+				
+				<div class="col-lg-6 col-md-6 col-xs-12">
+					
+					<div class="form-group">
+						<div class="input-group">
 
-							<select id = "debdureemin" style="display:none" class ="test" name="minutes"> </select>
+				
+				<legend><b> Date :</b></legend>
 
-							<p style="display:none">	
-							<input class="form-control" type="text" id="duree" size="8" name="duree" placeholder="Durée en heure" />
-								
-							<select id="dureemin" style="display:none" name="dureemin" class="form-control">
+
+						<?php
+						jQuery_DatePicker('start');
+						?>
+
+						<label >Heure début :</label>
+						<?php
+							echo " <select class =\"test\" name=\"heure\"> ";
+							for ($h = 1 ; $h < 24 ; $h++)
+							{
+								echo "<option value =\"$h\"> ".sprintf("%02d",$h)."h </option>".PHP_EOL;
+							}
+							echo "</select>";
+							echo " <select id = 'debdureemin' class =\"test\" name=\"minutes\"> </select>";
+
+						//~ jQuery_TimePicker('start_','','','');
+						?>
+
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Durée en heure :</label>
+						<div class="col-sm-3"><input class="form-control" type="number" id="duree" size="8" name="duree" value="1" required/></div>
+						<label class="col-sm-1 control-label"> et </label>
+						<div class="col-lg-5 col-md-5 col-xs-5">
+							<select id="dureemin" name="dureemin" class="form-control col-lg-5 col-md-5 col-xs-5">
 								<option> </option>
 								<option> </option>
-								
 							</select>
-							</p>
+						</div>
+					</div>
 
-<!-- modif Clement Talledec 
-	Selection des données situé dans le fichier frmcontactlistDates.php qui renvoit en fonction de le premier formulaire dates ou le second formulaire date pour le nombre de jour -->
-
-					<script>
-						$(document).ready(function() {					
-								var $salle = $('#room');
-								var $Dates = $('#Dates');
-								var $domaine = $('#area');
-								
-								$salle.on('change', function() {	
-									var select = $(this);
-									var values = select.find(":selected").attr("value");
-									var value = values.split('/');
-									var id = value[0] ;
-																		
-									if (id != '') {
-										$Dates.empty();
-										jQuery.ajax({
-											type: 'GET',
-											url: 'frmcontactlistDates.php',
-											data: {
-												id: id
-											},
-											dataType : 'html',
-											success: function(returnData) {
-												$('#Dates').html(returnData);			
-											},
-											error: function(returnData) {
-												alert('Erreur lors de l execution de la commande AJAX  ');
-											}
-										});
-									}
-									else {
-										clear('Dates');
-									}
-								});
-
-							});
-					</script>
-
-				<div id = "Dates" ></div>
-<!--
-			</fieldset>
--->
 		<br/>
 		<br/>
 
@@ -342,47 +263,22 @@ bouton_aller_bas();
 	</div>
 
 	
-	<div id="toBot">
-	<?php echo get_vocab('bot_of_page'); ?>
-	</div>
-	
 	<script>
-		jQuery(document).ready(function() {
-			jQuery("#frmContact").validate({
-			  rules: {
-					"email": {
-					"email": true,
-					"maxlength": 255
-					},
-					"telephone": {
-					"required": true,
-					"digits" : true,
-					"maxlength": 10
-					},
-					"duree": {
-					"required": true,
-					"digits" : true
-					},
-					"area": {
-					"required": true,
-					"value" 
-					},
-					"room": {
-					"required": true
-					},
-					"subject": {
-					"required": true
-					},
-				 }
-			})
-		});
-		jQuery.extend(jQuery.validator.messages, {
-			required: "Ce champs est obligatoire !",
-			remote: "votre message",
-			email: "Format d'Email invalide !",
-			digits:"Ce champs n'accepte que des chiffres."
-		});
-	</script>
+	jQuery(document).ready(function() {
+	jQuery("#formStep").validate({
+      rules: {
+        "email": {
+			"email": true,
+			"maxlength": 255
+        }}
+	})
+});
+jQuery.extend(jQuery.validator.messages, {
+	required: "votre message",
+	remote: "votre message",
+	email: "votre message",
+});
+</script>
 	
 </div>
 </form>

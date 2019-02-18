@@ -2,14 +2,10 @@
 /**
  * admin_type.php
  * Interface de gestion des types de réservations
- * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2010-03-03 14:41:34 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @copyright Copyright 2003-2008 Laurent Delineau
+ * Dernière modification : $Date: 2017-12-16 14:00$
+ * @author    JeromeB & Laurent Delineau
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   root
- * @version   $Id: admin_type.php,v 1.8 2010-03-03 14:41:34 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -17,15 +13,6 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 include "../include/admin.inc.php";
 $grr_script_name = "admin_type.php";
@@ -67,7 +54,8 @@ echo "<br />\n";
 echo "| <a href=\"admin_type_modify.php?id=0\">".get_vocab("display_add_type")."</a> |\n";
 echo "<br />\n";
 echo "<br />\n";
-$sql = "SELECT id, type_name, order_display, couleur, type_letter, disponible FROM ".TABLE_PREFIX."_type_area ORDER BY order_display";
+$sql = "SELECT id, type_name, order_display, couleurhexa, type_letter, disponible FROM ".TABLE_PREFIX."_type_area
+ORDER BY order_display,type_letter";
 $res = grr_sql_query($sql);
 $nb_lignes = grr_sql_count($res);
 if ($nb_lignes == 0)
@@ -77,10 +65,11 @@ if ($nb_lignes == 0)
 	echo "</body></html>";
 	die();
 }
-//modif_Elodie
 // Affichage du tableau
 echo "<table border=\"1\" cellpadding=\"3\"><tr>\n";
-echo "<tr><td><b>".get_vocab("type_name")."</b></td>\n";
+// echo "<tr><td><b>".get_vocab("type_num")."</a></b></td>\n";
+echo "<td><b>".get_vocab("type_num")."</b></td>\n";
+echo "<td><b>".get_vocab("type_name")."</b></td>\n";
 echo "<td><b>".get_vocab("type_color")."</b></td>\n";
 echo "<td><b>".get_vocab("type_order")."</b></td>\n";
 echo "<td><b>".get_vocab("disponible_pour")."</b></td>\n";
@@ -94,19 +83,20 @@ if ($res)
 		$type_name          = $row[1];
 		$order_display      = $row[2];
 		$couleur            = $row[3];
-		//$type_letter        = $row[4];
-		$disponible         = $row[5];
+		$type_letter        = $row[4];
+		$disponible         =$row[5] ;
 	// Affichage des numéros et descriptions
-		//$col[$i][1] = $type_letter;
-		//$col[$i][2] = $id_type;
-		//$col[$i][1] = $type_name;
+		$col[$i][1] = $type_letter;
+		$col[$i][2] = $id_type;
+		$col[$i][3] = $type_name;
 	// Affichage de l'ordre
-		//$col[$i][4] = $order_display;
-		//$col[$i][5] = $couleur;
+		$col[$i][4] = $order_display;
+		$col[$i][5] = $couleur;
 		echo "<tr>\n";
-		echo "<td><a href='admin_type_modify.php?id_type=$id_type'>$type_name</a></td>\n";
-		echo "<td style=\"background-color:".$couleur."\"></td>\n";	
-		echo "<td>$order_display</td>\n";
+		echo "<td>{$col[$i][1]}</td>\n";
+		echo "<td><a href='admin_type_modify.php?id_type={$col[$i][2]}'>{$col[$i][3]}</a></td>\n";
+		echo "<td style=\"background-color:".$couleur."\"></td>\n";
+		echo "<td>{$col[$i][4]}</td>\n";
 		echo "<td>\n";
 		if ($disponible == '2')
 			echo get_vocab("all");
@@ -116,14 +106,12 @@ if ($res)
 			echo get_vocab("only_administrators");
 		echo "</td>\n";
 		$themessage = get_vocab("confirm_del");
-		echo "<td><a href='admin_type.php?&amp;type_del=$id_type&amp;action_del=yes' onclick='return confirmlink(this, \"$type_name\", \"$themessage\")'>".get_vocab("delete")."</a></td>";
+		echo "<td><a href='admin_type.php?&amp;type_del={$col[$i][2]}&amp;action_del=yes' onclick='return confirmlink(this, \"{$col[$i][1]}\", \"$themessage\")'>".get_vocab("delete")."</a></td>";
 	// Fin de la ligne courante
 		echo "</tr>";
 	}
 }
 echo "</table>";
-
-
 // Test de cohérence des types de réservation
 $res = grr_sql_query("SELECT DISTINCT type FROM ".TABLE_PREFIX."_entry ORDER BY type");
 if ($res)

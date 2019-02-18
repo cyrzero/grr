@@ -3,13 +3,10 @@
  * report.php
  * interface afficheant un rapport des réservations
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2010-01-06 10:21:19 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @copyright Copyright 2003-2008 Laurent Delineau
+ * Dernière modification : $Date: 2017-12-16 14:00$
+ * @author    Laurent Delineau & JeromeB
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   root
- * @version   $Id: report.php,v 1.17 2010-01-06 10:21:19 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -17,15 +14,6 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 include "include/connect.inc.php";
 include "include/config.inc.php";
@@ -580,7 +568,7 @@ if (($summarize != 4) && ($summarize != 5))
 						if (( !isset($_GET['pview']) || ($_GET['pview'] != 1)) && (($summarize != 4) && ($summarize != 5)))
 						{
 							echo '<p style="text-align:center;">
-							<a href="' . traite_grr_url("","y")."report.php" . '?' . htmlspecialchars($_SERVER['QUERY_STRING']) . '&amp;pview=1" ';
+							<a href="./report.php '. '?' . htmlspecialchars($_SERVER['QUERY_STRING']) . '&amp;pview=1" ';
 							if (Settings::get("pview_new_windows") == 1)
 								echo ' target="_blank"';
 							echo '><span class="glyphicon glyphicon-print"></span></a>
@@ -610,7 +598,7 @@ if (($summarize != 4) && ($summarize != 5))
 //  10  [9]   Room (HTML) -> r.room_name
 //  11  [10]  Room description -> r.description
 //  12  [11]  id de l'area -> a.id
-//  13  [12]  les champs additionnele -> e.overload_desc
+//  13  [12]  les champs additionnels -> e.overload_desc
 	// Tableau des ressources invisibles pour l'utilisateur
 					$sql = "SELECT distinct e.id, e.start_time, e.end_time, e.name, e.description, "
 					. "e.type, e.beneficiaire, "
@@ -845,7 +833,7 @@ else
 			else
 			{
 				// Ligne d'en-tête
-				echo html_entity_decode($vocab["reservee au nom de"]).";".html_entity_decode($vocab["areas"]).";".html_entity_decode($vocab["room"]).html_entity_decode(preg_replace("/ /", " ",$vocab["deux_points"])).";".html_entity_decode($vocab["description"]).";".html_entity_decode($vocab["time"])." - ".html_entity_decode($vocab["duration"]).";".html_entity_decode($vocab["namebooker"]).html_entity_decode(preg_replace("/ /", " ",$vocab["deux_points"])).";".html_entity_decode($vocab["match_descr"]).";".html_entity_decode($vocab["lastupdate"]).";\n";
+				echo html_entity_decode($vocab["reservee au nom de"]).";".html_entity_decode($vocab["areas"]).";".html_entity_decode($vocab["room"]).html_entity_decode(preg_replace("/ /", " ",$vocab["deux_points"])).";".html_entity_decode($vocab["description"]).";".html_entity_decode($vocab["time"])." - ".html_entity_decode($vocab["duration"]).";".html_entity_decode($vocab["namebooker"]).html_entity_decode(preg_replace("/ /", " ",$vocab["deux_points"])).";".html_entity_decode($vocab["match_descr"]).";".html_entity_decode($vocab["type"]).";".html_entity_decode($vocab["lastupdate"]).";\n";
 			}
 			for ($i = 0; ($row = grr_sql_row($res, $i)); $i++)
 			{
@@ -870,6 +858,9 @@ else
 				$texte = str_replace(CHR(10)," ", removeMailUnicode($row[4]));
 				$texte = str_replace(CHR(13)," ", $texte);
 				echo ltrim(rtrim(($texte))) . ";";
+				// Type
+				$leType = grr_sql_query1("SELECT type_name FROM ".TABLE_PREFIX."_type_area WHERE type_letter = '".$row[5]."'");
+				echo $leType .";";
 				//Date derniere modif
 				echo date_time_string($row[7], $dformat) . ";";
 				echo "\r\n";

@@ -3,13 +3,10 @@
  * contact.php
  * Formulaire d'envoi de mail
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2009-09-29 18:02:56 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @copyright Copyright 2003-2008 Laurent Delineau
+ * Dernière modification : $Date: 2017-12-16 14:00$
+ * @author    Laurent Delineau & JeromeB
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   root
- * @version   $Id: contact.php,v 1.4 2009-09-29 18:02:56 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -17,15 +14,6 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 include_once('include/connect.inc.php');
 include_once('include/config.inc.php');
@@ -52,10 +40,9 @@ if (($fin_session == 'y') && (Settings::get("authentification_obli") == 1))
 	header("Location: ./logout.php?auto=1&url=$url");
 	die();
 }
-if ((Settings::get("authentification_obli") == 0) && (getUserName() == ''))
-	$type_session = "no_session";
-else
-	$type_session = "with_session";
+
+$type_session = "no_session";
+
 header('Content-Type: text/html; charset=utf-8');
 echo begin_page(Settings::get("company"));
 echo "<div class=\"page_sans_col_gauche\">";
@@ -116,34 +103,15 @@ switch ($action)
 	$message .= $vocab["email"].preg_replace("/ /", " ",$vocab["deux_points"]).$email_reponse."\n";
 	$message.="\n".$corps_message."\n";
 	$sujet = $vocab["subject_mail1"]." - ".$objet_message;
-	error_reporting (E_ALL ^ E_NOTICE ^ E_WARNING);
-	require 'phpmailer/PHPMailerAutoload.php';
-	define("GRR_FROM",Settings::get("grr_mail_from"));
-	define("GRR_FROMNAME",Settings::get("grr_mail_fromname"));
-	$mail = new PHPMailer();
-	$mail->isSMTP();
-	$mail->SMTPDebug = 0;
-	$mail->Debugoutput = 'html';
-	$mail->Host = Settings::get("grr_mail_smtp");
-	$mail->Port = 25;
-	$mail->SMTPAuth = false;
-	$mail->CharSet = 'UTF-8';
-	$mail->setFrom(GRR_FROM, GRR_FROMNAME);
-	$mail->SetLanguage("fr", "./phpmailer/language/");
-	setlocale(LC_ALL, $locale);
-	$tab_destinataire = explode(';',preg_replace("/ /", "",$destinataire));
-	foreach ($tab_destinataire as $item_email)
-		$mail->AddAddress($item_email);
-	$mail->Subject = $sujet;
-	$mail->Body = $message;
-	$mail->AddReplyTo( $email_reponse );
-	if (!$mail->Send())
-	{
-		$message_erreur .= $mail->ErrorInfo;
-		echo $message_erreur;
-	}
-	else
-		echo "<p style=\"text-align: center\">Votre message a été envoyé !</p>";
+
+	require_once 'phpmailer/PHPMailerAutoload.php';
+	require_once 'include/mail.class.php';
+
+	$destinataire = Settings::get("webmaster_email");
+	Email::Envois($destinataire, $sujet, $message, $email_reponse, '', '');
+
+	echo "<p style=\"text-align: center\">Votre message a été envoyé !</p>";
+
 	break;
 	default:
 	echo "<table cellpadding='5'>";
@@ -173,7 +141,7 @@ switch ($action)
 		if (($user_email != "") && ($user_email != -1))
 			echo "value='".$user_email."' ";
 	}
-	echo "/>\n";
+	echo "required />\n";
 	echo "<br />\n";
 	echo "<p style=\"text-align:center;\">";
 	echo "<input type='button' value='".get_vocab("submit")."' onclick='verif_et_valide_envoi();' />\n";
@@ -186,13 +154,6 @@ switch ($action)
 			objet=document.getElementById('objet_message').value;
 			if (objet=='') {
 				alert('Vous n\\'avez pas saisi d\\'objet au message. Ce champ est obligatoire.');
-				exit();
-			}
-		}
-		if (document.getElementById('end_')) {
-			duree=document.getElementById('end_').value;
-			if (duree=='') {
-				alert('Vous n\\'avez pas saisi de durée. Ce champ est obligatoire.');
 				exit();
 			}
 		}

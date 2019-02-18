@@ -1,17 +1,11 @@
 <?php
 /**
  * admin_edit_room.php
- * Interface de creation/modification
- * des sites, domaines et des ressources de l'application GRR
- * Derniere modification : $Date: 2010-04-07 15:38:14 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @author    Marc-Henri PAMISEUX <marcori@users.sourceforge.net>
- * @copyright Copyright 2003-2008 Laurent Delineau
- * @copyright Copyright 2008 Marc-Henri PAMISEUX
+ * Interface de creation/modification des sites, domaines et des ressources de l'application GRR
+ * Dernière modification : $Date: 2017-12-16 14:00$
+ * @author    Laurent Delineau & JeromeB & Marc-Henri PAMISEU
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   admin
- * @version   $Id: admin_edit_room.php,v 1.16 2010-04-07 15:38:14 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -19,16 +13,8 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 include "../include/admin.inc.php";
 $grr_script_name = "admin_edit_room.php";
 $ok = NULL;
@@ -44,8 +30,8 @@ $change_area = isset($_POST["change_area"]) ? $_POST["change_area"] : NULL;
 $area_name = isset($_POST["area_name"]) ? $_POST["area_name"] : NULL;
 $access = isset($_POST["access"]) ? $_POST["access"] : NULL;
 $ip_adr = isset($_POST["ip_adr"]) ? $_POST["ip_adr"] : NULL;
-$room_name = htmlspecialchars(isset($_POST["room_name"]) ? $_POST["room_name"] : NULL);
-$description = htmlspecialchars(isset($_POST["description"]) ? $_POST["description"] : NULL);
+$room_name = isset($_POST["room_name"]) ? $_POST["room_name"] : NULL;
+$description = isset($_POST["description"]) ? $_POST["description"] : NULL;
 $capacity = isset($_POST["capacity"]) ? $_POST["capacity"] : NULL;
 $duree_max_resa_area1  = isset($_POST["duree_max_resa_area1"]) ? $_POST["duree_max_resa_area1"] : NULL;
 $duree_max_resa_area2  = isset($_POST["duree_max_resa_area2"]) ? $_POST["duree_max_resa_area2"] : NULL;
@@ -57,9 +43,6 @@ $dont_allow_modify  = isset($_POST["dont_allow_modify"]) ? $_POST["dont_allow_mo
 $qui_peut_reserver_pour  = isset($_POST["qui_peut_reserver_pour"]) ? $_POST["qui_peut_reserver_pour"] : NULL;
 $who_can_see  = isset($_POST["who_can_see"]) ? $_POST["who_can_see"] : NULL;
 $max_booking = isset($_POST["max_booking"]) ? $_POST["max_booking"] : NULL;
-$access_file = isset($_POST["access_file"]) ? $_POST["access_file"] : NULL;
-$user_right = isset($_POST["user_right"]) ? $_POST["user_right"] : NULL;
-$upload_file = isset($_POST["upload_file"]) ? $_POST["upload_file"] : NULL;
 settype($max_booking, "integer");
 if ($max_booking<-1)
 	$max_booking = -1;
@@ -73,11 +56,24 @@ else
 	// toutes les reservations sont considerees comme restituee
 	grr_sql_query("update ".TABLE_PREFIX."_entry set statut_entry = '-' where room_id = '".$room."'");
 }
+if (isset($_POST["active_cle"]))
+	$active_cle = 'y';
+else
+{
+	$active_cle = 'n';
+	// toutes les reservations sont considerees comme restituee
+	grr_sql_query("update ".TABLE_PREFIX."_entry set statut_entry = '-' where room_id = '".$room."'");
+}
 $picture_room = isset($_POST["picture_room"]) ? $_POST["picture_room"] : NULL;
 $comment_room = isset($_POST["comment_room"]) ? $_POST["comment_room"] : NULL;
 $show_comment = isset($_POST["show_comment"]) ? "y" : "n";
 $change_done = isset($_POST["change_done"]) ? $_POST["change_done"] : NULL;
-$area_order = isset($_POST["area_order"]) ? $_POST["area_order"] : NULL;
+if(!isset($_POST["area_order"]) || empty($_POST["area_order"])){
+	$area_order = 0;
+} else{
+	$area_order = $_POST["area_order"];
+}
+
 $room_order = isset($_POST["room_order"]) ? $_POST["room_order"] : NULL;
 $change_room = isset($_POST["change_room"]) ? $_POST["change_room"] : NULL;
 $number_periodes = isset($_POST["number_periodes"]) ? $_POST["number_periodes"] : NULL;
@@ -189,12 +185,12 @@ if ((!empty($room)) || (isset($area_id)))
 			}
 			else
 			{
-				if (@file_exists($dest."img_".$room.".jpg"))
-					unlink($dest."img_".$room.".jpg");
-				if (@file_exists($dest."img_".$room.".png"))
-					unlink($dest."img_".$room.".png");
-				if (@file_exists($dest."img_".$room.".gif"))
-					unlink($dest."img_".$room.".gif");
+				if (@file_exists($dest."img_".TABLE_PREFIX."".$room.".jpg"))
+					unlink($dest."img_".TABLE_PREFIX."".$room.".jpg");
+				if (@file_exists($dest."img_".TABLE_PREFIX."".$room.".png"))
+					unlink($dest."img_".TABLE_PREFIX."".$room.".png");
+				if (@file_exists($dest."img_".TABLE_PREFIX."".$room.".gif"))
+					unlink($dest."img_".TABLE_PREFIX."".$room.".gif");
 				$picture_room = "";
 			}
 		}
@@ -227,6 +223,7 @@ if ((!empty($room)) || (isset($area_id)))
 			area_id='".$area_id."',
 			show_fic_room='".$show_fic_room."',
 			active_ressource_empruntee = '".$active_ressource_empruntee."',
+			active_cle = '".$active_cle."',
 			capacity='".$capacity."',
 			delais_max_resa_room='".$delais_max_resa_room."',
 			delais_min_resa_room='".$delais_min_resa_room."',
@@ -257,6 +254,7 @@ if ((!empty($room)) || (isset($area_id)))
 			comment_room='".protect_data_sql(corriger_caracteres($comment_room))."',
 			show_fic_room='".$show_fic_room."',
 			active_ressource_empruntee = '".$active_ressource_empruntee."',
+			active_cle = '".$active_cle."',
 			capacity='".$capacity."',
 			delais_max_resa_room='".$delais_max_resa_room."',
 			delais_min_resa_room='".$delais_min_resa_room."',
@@ -318,11 +316,11 @@ if ((!empty($room)) || (isset($area_id)))
 					{
 						$tab = explode(".", $doc_file['name']);
 						$ext = strtolower($tab[1]);
-						if (@file_exists($dest."img_".$room.".".$ext))
-							@unlink($dest."img_".$room.".".$ext);
-						rename($dest.$doc_file['name'],$dest."img_".$room.".".$ext);
-						@chmod($dest."img_".$room.".".$ext, 0666);
-						$picture_room = "img_".$room.".".$ext;
+						if (@file_exists($dest."img_".TABLE_PREFIX."".$room.".".$ext))
+							@unlink($dest."img_".TABLE_PREFIX."".$room.".".$ext);
+						rename($dest.$doc_file['name'],$dest."img_".TABLE_PREFIX."".$room.".".$ext);
+						@chmod($dest."img_".TABLE_PREFIX."".$room.".".$ext, 0666);
+						$picture_room = "img_".TABLE_PREFIX."".$room.".".$ext;
 						$sql_picture = "UPDATE ".TABLE_PREFIX."_room SET picture_room='".protect_data_sql($picture_room)."' WHERE id=".$room;
 						if (grr_sql_command($sql_picture) < 0)
 						{
@@ -401,6 +399,7 @@ if ((!empty($room)) || (isset($area_id)))
 		$row['moderate'] = '';
 		$row['show_fic_room'] = '';
 		$row['active_ressource_empruntee'] = 'n';
+		$row['active_cle'] = 'n';
 		$area_name = grr_sql_query1("select area_name from ".TABLE_PREFIX."_area where id='".$area_id."'");
 		echo "<h2>".get_vocab("match_area").get_vocab('deux_points')." ".$area_name."<br />".get_vocab("addroom")."</h2>\n";
 
@@ -646,7 +645,14 @@ if ((!empty($room)) || (isset($area_id)))
 		if ($row['active_ressource_empruntee'] == "y")
 			echo " checked=\"checked\" ";
 		echo "/></td></tr>\n";
+// Activer la gestion des clés
+		echo "<tr><td>".get_vocab("activer_fonctionalite_gestion_cle")."</td><td><input type=\"checkbox\" name=\"active_cle\" ";
+		if ($row['active_cle'] == "y")
+			echo " checked=\"checked\" ";
+		echo "/></td></tr>\n";
+	//
 		echo "</table>\n";
+		Hook::Appel("hookEditRoom1");
 		echo "<div style=\"text-align:center;\"><br />\n";
 		echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_room\"  value=\"".get_vocab("save")."\" />\n";
 		echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_done\" value=\"".get_vocab("back")."\" />";
@@ -752,10 +758,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 				enable_periods = '".protect_data_sql($_POST['enable_periods'])."',
 				twentyfourhour_format_area = '".protect_data_sql($_POST['twentyfourhour_format_area'])."',
 				max_booking='".$max_booking."',
-				display_days = '".$display_days."',
-				user_right = '".$user_right."',
-				access_file = ".$access_file.",
-				upload_file = ".$upload_file."
+				display_days = '".$display_days."'
 				WHERE id=$id_area";
 				if (grr_sql_command($sql) < 0)
 				{
@@ -1036,7 +1039,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 		echo "</table>";
 		// Configuration des plages horaires ...
 		echo "<h3>".get_vocab("configuration_plages_horaires")."</h3>";
-		// Debut de la semaine: 0 pour dimanche, 1 pour lundi, etc.
+		// Debut de la semaine: 0 pour dimanche, 1 pou lundi, etc.
 		echo "<table border=\"1\" cellspacing=\"1\" cellpadding=\"6\">";
 		echo "<tr>\n";
 		echo "<td>".get_vocab("weekstarts_area").get_vocab("deux_points")."</td>\n";
@@ -1048,7 +1051,7 @@ if ((!empty($id_area)) || (isset($add_area)))
 			echo "<option value=\"".$k."\" ";
 			if ($k == $row['weekstarts_area'])
 				echo " selected=\"selected\"";
-			echo ">".strftime("%A", $tmp)."</option>\n";
+			echo ">".utf8_strftime("%A", $tmp)."</option>\n";
 			$k++;
 		}
 		echo "</select></td>\n";
@@ -1057,28 +1060,13 @@ if ((!empty($id_area)) || (isset($add_area)))
 		echo "<tr>\n";
 		echo "<td>".get_vocab("cocher_jours_a_afficher")."</td>\n";
 		echo "<td>\n";
-
-
-		//echo "<p>" .day_name("3")."</p>";
-
-		//~ for ($i = 0; $i < 7; $i++)
-		//~ {
-			//~ echo "<label> <input name= \"display_day[".$i."]\"type=\"checkbox\"";
-			//~ if (substr($row["display_days"], $i, 1) == 'y')
-				//~ echo " checked=\"checked\"";
-				//~ echo "/>".day_name["$i"]. "</label><br/>\n" ;
-		//~ }
-
-		//$daynumber=$i;
 		for ($i = 0; $i < 7; $i++)
 		{
-			$tmp=mktime(0, 0, 0, 10, 2 + $i, 2005);
-			echo "<label> <input name= \"display_day[".$i."]\"type=\"checkbox\"";
+			echo "<label><input name=\"display_day[".$i."]\" type=\"checkbox\"";
 			if (substr($row["display_days"], $i, 1) == 'y')
 				echo " checked=\"checked\"";
-				echo "/>". strftime("%A", $tmp)."</label><br/>\n" ;
+			echo " />" . day_name($i) . "</label><br />\n";
 		}
-
 		echo "</td>\n";
 		echo "</tr></table>";
 		echo "<h3>".get_vocab("type_de_creneaux")."</h3>";
@@ -1192,83 +1180,12 @@ if ((!empty($id_area)) || (isset($add_area)))
 			// L'utilisateur ne peut reserver qu'une duree limitee (-1 desactivee), exprimee en minutes
 			echo "<tr>\n<td>".get_vocab("duree_max_resa_area").get_vocab("deux_points");
 			echo "</td>\n<td><input class=\"form-control\" type=\"text\" name=\"duree_max_resa_area1\" size=\"5\" value=\"".$row["duree_max_resa_area"]."\" /></td></tr>\n";
-			echo "</table>";
-			echo "<table>";
 			// Nombre max de reservation par domaine
 			echo "<tr><td>".get_vocab("max_booking")." -  ".get_vocab("all_rooms_of_area").get_vocab("deux_points");
 			echo "</td><td><input class=\"form-control\" type=\"text\" name=\"max_booking\" value=\"".$row['max_booking']."\" /></td>\n";
 			echo "</tr></table>";
-			echo "<h3>".get_vocab('ajout_fichier_joint')."</h3>";
-			echo "<table style='width:100%' border='1' cellspacing='1' cellpadding='6' ><tr>";
-			echo "<td>Ajout de fichier(s) joint aux ressources</td>";
-			echo "<td style='width:30%'>
-						<label><input type='radio' name='access_file' value='0'  ";
-						if($row['access_file'] == 0)
-							echo "checked";
-			echo "  />Oui</label><br/>
-						<label><input type='radio' name='access_file' value='1'  ";
-						if($row['access_file'] == 1)
-							echo "checked";
-			echo "  />Non</label></td>";
-			echo "</tr>";
-			echo "<tr>";
-			echo "<td>Droit pour voir les fichiers</td>";
-			echo "<td style='width'>
-						<label><input type='radio' name='user_right' value='1' ";
-						if($row['user_right'] == 1)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description1")."</label></br>
-						<label><input type='radio' name='user_right' value='2'  ";
-						if($row['user_right'] == 2)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description2")."</label></br>
-						<label><input type='radio' name='user_right' value='3'  ";
-						if($row['user_right'] == 3)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description3")."</label></br>
-						<label><input type='radio' name='user_right' value='4'  ";
-						if($row['user_right'] == 4)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description4")."</label></br>
-						<label><input type='radio' name='user_right' value='5'  ";
-						if($row['user_right'] == 5)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description5")."</label></br>
-						<label><input type='radio' name='user_right' value='6'  ";
-						if($row['user_right'] == 6 || $row['user_right'] == null)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description6")."</label></td>";
-			echo "</tr>";
-			echo "<tr>";
-			echo "<td>Droit pour uploader les fichiers</td>";
-			echo "<td style='width'>
-						<label><input type='radio' name='upload_file' value='1' ";
-						if($row['upload_file'] == 1)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description1")."</label></br>
-						<label><input type='radio' name='upload_file' value='2'  ";
-						if($row['upload_file'] == 2)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description2")."</label></br>
-						<label><input type='radio' name='upload_file' value='3'  ";
-						if($row['upload_file'] == 3)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description3")."</label></br>
-						<label><input type='radio' name='upload_file' value='4'  ";
-						if($row['upload_file'] == 4)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description4")."</label></br>
-						<label><input type='radio' name='upload_file' value='5'  ";
-						if($row['upload_file'] == 5)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description5")."</label></br>
-						<label><input type='radio' name='upload_file' value='6'  ";
-						if($row['upload_file'] == 6 || $row['upload_file'] == null)
-							echo "checked";
-			echo "  />".get_vocab("visu_fiche_description6")."</label></td>";
-			echo "</tr></table>";
+			Hook::Appel("hookEditArea1");
 			echo "<div style=\"text-align:center;\">\n";
-			echo "</br>";
 			echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_area\" value=\"".get_vocab("save")."\" />\n";
 			echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_done\" value=\"".get_vocab("back")."\" />\n";
 			echo "<input class=\"btn btn-primary\" type=\"submit\" name=\"change_area_and_back\" value=\"".get_vocab("save_and_back")."\" />";
@@ -1281,7 +1198,3 @@ if ((!empty($id_area)) || (isset($add_area)))
 		?>
 	</body>
 	</html>
-
-    Contact GitHub API Training Shop Blog About
-
-    © 2017 GitHub, Inc. Terms Privacy Security Status Help

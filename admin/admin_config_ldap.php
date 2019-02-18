@@ -3,13 +3,10 @@
  * admin_config_ldap.php
  * Interface permettant la configuration de l'accès à un annuaire LDAP
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2009-12-02 20:11:07 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @copyright Copyright 2003-2008 Laurent Delineau
+ * Dernière modification : $Date: 2017-12-16 14:00$
+ * @author    Laurent Delineau & JeromeB
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   root
- * @version   $Id: admin_config_ldap.php,v 1.12 2009-12-02 20:11:07 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -17,16 +14,8 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 include "../include/connect.inc.php";
 include "../include/config.inc.php";
 include "../include/misc.inc.php";
@@ -60,6 +49,12 @@ else
 $base_ldap = isset($_POST["base_ldap"]) ? $_POST["base_ldap"] : NULL;
 $base_ldap_autre = isset($_POST["base_ldap_autre"]) ? $_POST["base_ldap_autre"] : NULL;
 $ldap_filter = isset($_POST["ldap_filter"]) ? $_POST["ldap_filter"] : NULL;
+
+$ldap_group_member_attr = isset($_POST["ldap_group_member_attr"]) ? $_POST["ldap_group_member_attr"] : NULL;
+$ldap_group_base = isset($_POST["ldap_group_base"]) ? $_POST["ldap_group_base"] : NULL;
+$ldap_group_filter = isset($_POST["ldap_group_filter"]) ? $_POST["ldap_group_filter"] : NULL;
+$ldap_group_user_field = isset($_POST["ldap_group_user_field"]) ? $_POST["ldap_group_user_field"] : NULL;
+
 $titre_ldap = "Configuration de l'authentification LDAP";
 if (isset($_POST['reg_ldap_statut']))
 {
@@ -136,7 +131,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 	<!doctype html>
 	<html>
 		<head>
-			<link rel="stylesheet" href="../themes/default/css/style.css" type="text/css">
+			<link rel="stylesheet" href="style.css" type="text/css">
 			<title> grr </title>
 			<link rel="shortcut icon" href="./favicon.ico">
 			</head>
@@ -170,7 +165,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 		$back = '';
 		if (isset($_SERVER['HTTP_REFERER']))
 			$back = htmlspecialchars($_SERVER['HTTP_REFERER']);
-		if ((isset($sso_restrictions)) && ($sso_restrictions == true))
+		if ((isset($ldap_restrictions)) && ($ldap_restrictions == true))
 		{
 			showAccessDenied($back);
 			exit();
@@ -192,7 +187,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 			<!doctype html>
 			<html>
 				<head>
-					<link rel="stylesheet" href="../themes/default/css/style.css" type="text/css">
+					<link rel="stylesheet" href="style.css" type="text/css">
 					<link rel="shortcut icon" href="favicon.ico">
 						<title> grr </title>
 					</head>
@@ -269,6 +264,11 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 							$conn .= "# Attention : si vous configurez manuellement ce fichier (sans passer par la configuration en ligne)\n";
 							$conn .= "# vous devez tout de même activer LDAP en choisissant le \"statut par défaut des utilisateurs importés\".\n";
 							$conn .= "# Pour cela, rendez-vous sur la page : configuration -> Configuration LDAP.\n";
+							$conn .= "\n#SE3 variables\n";
+							$conn .= "\$ldap_group_member_attr=\"{$ldap_group_member_attr}\";\n";
+							$conn .= "\$ldap_group_base=\"{$ldap_group_base}\";\n";
+							$conn .= "\$ldap_group_filter=\"{$ldap_group_filter}\";\n";
+							$conn .= "\$ldap_group_user_field=\"{$ldap_group_user_field}\";\n";
 							$conn .= "?".">";
 							@fputs($f, $conn);
 							if (!@fclose($f))
@@ -430,6 +430,7 @@ if ((!grr_resumeSession()) && $valid != 'yes')
 							echo "<input type=\"hidden\" name=\"ldap_filter\" value=\"$ldap_filter\" />";
 						if (isset($ldap_base))
 							echo "<input type=\"hidden\" name=\"ldap_base\" value=\"$ldap_base\" />";
+						//TODO: Ajouter les informations pour les groupes
 						echo encode_message_utf8("<br /><br /><b>Remarque : pour le moment, aucune modification n'a été apportée au fichier de configuration \"config_ldap.inc.php\".</b><br />
 							Les informations ne seront enregistrées qu'à la fin de la procédure de configuration.</div>");
 

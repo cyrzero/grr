@@ -1,4 +1,7 @@
-// Permet de faire une validation afin que l'usager ne puisse pas s�lectionner un jour invalide pour le d�but du premier Jours/Cycle
+/* ce script fait partie de l'application GRR
+ * dernière mise à jour : 2018-04-18 14:00
+*/
+// Permet de faire une validation afin que l'usager ne puisse pas sélectionner un jour invalide pour le début du premier Jours/Cycle
 function verifierJoursCycles()
 {
 	valeurA = document.getElementById('jourDebut').value;
@@ -45,9 +48,9 @@ function clicMenu(num)
 function centrerpopup(page,largeur,hauteur,options)
 {
 // les options :
-//    * left=100 : Position de la fen�tre par rapport au bord gauche de l'�cran.
-//    * top=50 : Position de la fen�tre par rapport au haut de l'�cran.
-//    * resizable=x : Indique si la fen�tre est redimensionnable.
+//    * left=100 : Position de la fenêtre par rapport au bord gauche de l'écran.
+//    * top=50 : Position de la fenêtre par rapport au haut de l'écran.
+//    * resizable=x : Indique si la fenêtre est redimensionnable.
 //    * scrollbars=x : Indique si les barres de navigations sont visibles.
 //    * menubar=x : Indique si la barre des menus est visible.
 //    * toolbar=x : Indique si la barre d'outils est visible.
@@ -90,11 +93,11 @@ function confirmButton(theform,themessage)
 }
 // end of the 'confirmButton()' function
 /**
- * Checks/unchecks les boites � cocher
+ * Checks/unchecks les boîtes à cocher
  *
  * the_form   string   the form name
  * do_check   boolean  whether to check or to uncheck the element
- * day la valaur de de la boite � cocher ou � d�cocher
+ * day la valaur de la boîte à cocher ou à décocher
  * return  boolean  always true
  */
  function setCheckboxesGrr(elts, do_check, day)
@@ -105,6 +108,21 @@ function confirmButton(theform,themessage)
  		if (type="checkbox")
  		{
  			if ((elts[i].value== day) || (day=='all'))
+ 			{
+ 				elts[i].checked = do_check;
+ 			}
+ 		}
+ 	}
+ 	return true;
+} // end of the 'setCheckboxes()' function
+ function setCheckboxesGrrName(elts, do_check, day)
+ {
+ 	for (i = 0; i < elts.length; i++)
+ 	{
+ 		type = elts.type;
+ 		if (type="checkbox")
+ 		{
+ 			if (elts[i].name== day)
  			{
  				elts[i].checked = do_check;
  			}
@@ -129,13 +147,13 @@ function _setCheckboxesGrr(the_form, do_check, day)
 	return true;
 }
 // end of the 'setCheckboxes()' function
-// Les quatre fonctions qui suivent servent � enregistrer un cookie
-// Elles sont utilis� par edit_enty.php pour conserver les informations de la saisie pour
-// pouvoir les r�cup�rer lors d'une erreur.
+// Les quatre fonctions qui suivent servent à enregistrer un cookie
+// Elles sont utilisées par edit_enty.php pour conserver les informations de la saisie pour
+// pouvoir les récupérer lors d'une erreur.
 //Hugo
 // Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues
 var FS_INCLUDE_NAMES = 0, FS_EXCLUDE_NAMES = 1, FS_INCLUDE_IDS = 2, FS_EXCLUDE_IDS = 3, FS_INCLUDE_CLASSES = 4, FS_EXCLUDE_CLASSES = 5;
-//Hugo - fonction qui r�cup�re les informations des champs input pour les stocker dans un cookie (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
+//Hugo - fonction qui récupère les informations des champs input pour les stocker dans un cookie (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
 function getFormString( formRef, oAndPass, oTypes, oNames )
 {
 	if (oNames)
@@ -183,7 +201,7 @@ function getFormString( formRef, oAndPass, oTypes, oNames )
 	}
 	return oStr;
 }
-//Hugo - Fonction qui r�cup�re les informations stock�es de le cookie pour les remttres dans les inputs (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
+//Hugo - Fonction qui récupère les informations stockées dans le cookie pour les remettre dans les inputs (Voir http://www.howtocreate.co.uk/jslibs/script-saveformvalues)
 function recoverInputs( formRef, oStr, oAndPass, oTypes, oNames )
 {
 	if (oStr)
@@ -281,7 +299,7 @@ function setCookie(cookieName, cookieValue, lifeTime, path, domain, isSecure)
 	}
 	return false;
 }
-/* fonction qui est utilis�e pour basculer un �l�ment d'une liste1 vers une liste2 et inversement (utilis� lors de la cr�ation d'une demande) */
+/* fonction qui est utilisée pour basculer un élément d'une liste1 vers une liste2 et inversement (utilisé lors de la création d'une demande) */
 function Deplacer(liste1, liste2)
 {
 	while (liste1.options.selectedIndex >= 0)
@@ -307,20 +325,22 @@ function selectionner_liste(IdListe)
 		IdListe.options[i].selected = true;
 	}
 }
-/*-----MAJ Lo�s THOMAS  --> Fonctions qui permettent de cacher et afficher le menu � gauche -----*/
+/*-----MAJ Loïs THOMAS  --> Fonctions qui permettent de cacher et afficher le menu à gauche -----*/
 function divaffiche(month_all2)
 {
 	var Nbr = month_all2;
 	if ( Nbr == 1)
 	{
-		document.getElementById("menuGaucheMonthAll2").style.display = "block";
-		document.getElementById("planningMonthAll2").style.marginLeft = "300px";
-		document.getElementById("planningMonthAll2").style.width = "auto";
+		document.getElementById("menuGaucheMonthAll2").style.display = "inline-block";
+		// document.getElementById("planningMonthAll2").style.marginLeft = "300px";
+		// document.getElementById("planning").style.width = "75%";
+        document.getElementById("planning").style.width = "auto";
+        document.getElementById("planningMonthAll2").style.width = "auto";
 	}
 	else
 	{
 		document.getElementById("menuGauche").style.display = "block";
-		document.getElementById("planning").style.marginLeft = "300px";
+		// document.getElementById("planning").style.marginLeft = "300px";
 		document.getElementById("planning").style.width = "auto";
 	}
 	document.getElementById("cacher").style.display = "inline";
@@ -333,7 +353,7 @@ function divcache(month_all2)
 	{
 		document.getElementById("menuGaucheMonthAll2").style.display = "none";
 		document.getElementById("planningMonthAll2").style.marginLeft = "0px";
-		document.getElementById("planningMonthAll2").style.width = "auto";
+		document.getElementById("planningMonthAll2").style.width = "133%";
 	}
 	else
 	{
@@ -364,126 +384,3 @@ function charger(){
 	test.style.display = 'Block';
 }
 
-function clearOptions(id){
-	document.getElementById(id).options.length = 0;
-	document.getElementById(id).innerHTML= '<optgroup label="Salles"><option value="">Selectionnez une ressource </option>'
-}
-
-//lance l'impression apr�s clic sur bouton et si configur� pour
-function printPage(optionPrint){
-	console.log("test print");
-	if((window.location.href.indexOf("&pview=1&precedent=1") > -1) & (optionPrint == 1)){
-       window.print();
-       console.log("impression");
-    }
-    else{
-		console.log("pas d'impression");
-	}
-}
-//==Gestion des fichiers joints==
-//upload des fichiers.
-function uploadFiles(){
-
-	var myForm = document.getElementById("uploadForm");
-	var progress = document.getElementById("avancement");
-	var infos = document.getElementById("infos");
-
-	myForm.onsubmit = function(event){
-
-		//d�sactive le traitement normal du formulaire
-		event.preventDefault();
-
-		//dispo de formData
-		if(window.FormData){
-			var fd = new FormData();
-		}
-		else{
-			alert("FormData non support� par votre navigateur");
-			return;
-		}
-
-		//init ajax
-		var xhr = new XMLHttpRequest();
-
-		//parametre de la requ�te
-		//myForm.getAttribute("action") = "upload.php";
-		xhr.open("post", myForm.getAttribute("action"), true);
-
-		xhr.onreadystatechange = function(event){
-			if(this.readyState == 4){
-				//affichage du retour texte de la requ�te
-				infos.innerHTML += event.target.responseText;
-			}
-		};
-		//sur la progression
-		xhr.onprogress = function(event){
-			if(event.lengthComputable){
-				var pourcentage = Math.round(event.loaded*100/event.total);
-				progress.setAttribute("aria-valuenow", pourcentage);
-				progress.value = pourcentage;
-			}
-		};
-
-		//liste des fichiers et id � envoyer
-		var inputFiles = document.getElementById('myFiles');
-		var fichiers = inputFiles.files;
-
-		for(i=0; i<fichiers.length; i++){
-			infos.innerHTML += "Envoi de "+fichiers[i].name+"...<br>";
-			fd.append(inputFiles.name, fichiers[i]);
-		}
-		var id_index = document.getElementById('id_entry');
-		fd.append("id_entry", id_index.value);
-		//envoi des donn�es
-		xhr.send(fd);
-	};
-}
-
-function loadFile(){
-	// v�rifie si une ligne est s�lectionn�e
-	var target = document.getElementById("SelectFile");
-	if(target.selectedIndex == -1){
-		alert("Veuillez selectionner un fichier")
-	}
-	else{
-		//r�cup�re le nom r�el du fichier et transmet la demande de r�cup�ration.
-		var fileSelected = target.options[target.selectedIndex].value;
-		console.log(fileSelected);
-		window.location.href = 'download_files.php?name='+fileSelected;
-	}
-}
-
-
-function deleteFile(id,rowIndex,idFile){
-	var dtarget = document.getElementById("table_supprimer");
-		if (confirm("Voulez-vous vraiment supprimer ce fichier ?")){
-			//pr�paration de l'ajax pour la suppression
-			var retourInfos = document.getElementById("retourInfos");
-			if (window.FormData){
-				var fData = new FormData();
-			}
-			else{
-				alert ("FormData non support�");
-				return;
-			}
-			var varAjax = new XMLHttpRequest();
-			varAjax.open("post", "deleteFile.php", true);
-			varAjax.onreadystatechange = function(event){
-				if(this.readyState == 4){
-					retourInfos.innerHTML += event.target.responseText;
-					dtarget.deleteRow(rowIndex);
-				}
-			};
-
-
-			//pr�paration des infos de suppression � transmettre.
-			fData.append("idFile", idFile);
-			fData.append("id", id);
-
-			varAjax.send(fData);
-		}
-		else{
-			return;
-		}
-
-}

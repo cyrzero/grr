@@ -3,13 +3,10 @@
  * year.php
  * Interface d'accueil avec affichage par mois sur plusieurs mois des réservation de toutes les ressources d'un domaine
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2009-12-02 20:11:08 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @copyright Copyright 2003-2008 Laurent Delineau
+ * Dernière modification : $Date: 2018-03-13 10:00$
+ * @author    Laurent Delineau & JeromeB & Yan Naessens
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   root
- * @version   $Id: year.php,v 1.16 2009-12-02 20:11:08 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -17,15 +14,6 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 include "include/connect.inc.php";
 include "include/config.inc.php";
@@ -44,12 +32,12 @@ if (!Settings::load())
 require_once("./include/session.inc.php");
 // Resume session
 include "include/resume_session.php";
+// Paramètres langage
+include "include/language.inc.php";
 // Construction des identifiants de la ressource $room, du domaine $area, du site $id_site
 Definition_ressource_domaine_site();
 // Récupération des données concernant l'affichage du planning du domaine
 get_planning_area_values($area);
-// Paramètres langage
-include "include/language.inc.php";
 // On affiche le lien "format imprimable" en bas de la page
 $affiche_pview = '1';
 if (!isset($_GET['pview']))
@@ -127,7 +115,7 @@ if (((authGetUserLevel(getUserName(),-1) < 1) && (Settings::get("authentificatio
 
 // On vérifie une fois par jour si le délai de confirmation des réservations est dépassé
 // Si oui, les réservations concernées sont supprimées et un mail automatique est envoyé.
-// On vérifie une fois par jour que les ressources ont été rendue en fin de réservation
+// On vérifie une fois par jour que les ressources ont été rendues en fin de réservation
 // Si non, une notification email est envoyée
 if (Settings::get("verif_reservation_auto") == 0)
 {
@@ -142,8 +130,10 @@ print_header($day, $from_month, $from_year, $type_session);
 $month_start = mktime(0, 0, 0, $from_month, 1, $from_year);
 //What column the month starts in: 0 means $weekstarts weekday.
 $weekday_start = (date("w", $month_start) - $weekstarts + 7) % 7;
-$days_in_to_month = date("t", $to_month);
-$month_end = mktime(23, 59, 59, $to_month, $days_in_to_month, $to_year);
+$month_end = mktime(23, 59, 59, $to_month, 1, $to_year);
+$days_in_to_month = date("t", $month_end);
+$month_end = mktime(23,59,59,$to_month,$days_in_to_month,$to_year);
+
 if ($enable_periods == 'y')
 {
 	$resolution = 60;
@@ -185,9 +175,9 @@ if ($_GET['pview'] != 1)
 	echo "</td><td>\n";
 	echo genDateSelector("to_", "", $to_month, $to_year,"");
 	echo "</td></tr>\n";
-	echo "<tr><td>\n";
+	echo "<tr><td class='CR'><p><br>\n";
 	echo "<input type=\"hidden\" name=\"area\" value=\"$area\" />\n";
-	echo "<input type=\"submit\" name=\"valider\" value=\"".$vocab["goto"]."\" /></td><td> </td></tr>\n";
+	echo "<input type=\"submit\" name=\"valider\" value=\"".$vocab["goto"]."\" /></p></td></tr>\n";
 	echo "</table>\n";
 	echo "</form></td>\n";
 	echo '<td><a title="'.htmlspecialchars(get_vocab('back')).'" href="'.page_accueil('no').'">'.$vocab['back'].'</a></td>';
@@ -371,8 +361,10 @@ while ($month_indice < $month_end)
 		$t2 += 86400;
 		// On inscrit le numéro du mois dans la deuxième ligne
 		if ($display_day[$cweek] == 1)
-		{
-			echo tdcell("cell_hours");
+		{   
+			if (isHoliday($temp)) {echo tdcell("cell_hours_ferie");}
+            else if (isSchoolHoliday($temp)) {echo tdcell("cell_hours_vacance");}
+            else {echo tdcell("cell_hours");}
 			echo "<div><a title=\"".htmlspecialchars(get_vocab("see_all_the_rooms_for_the_day"))."\"   href=\"day.php?year=$year_num&amp;month=$month_num&amp;day=$cday&amp;area=$area\">$name_day</a>";
 			if (Settings::get("jours_cycles_actif") == "Oui" && intval($jour_cycle)>-1)
 			{
@@ -424,7 +416,7 @@ while ($month_indice < $month_end)
 						echo "<img src=\"img_grr/stop.png\" alt=\"".get_vocab("reservation_impossible")."\"  title=\"".get_vocab("reservation_impossible")."\" width=\"16\" height=\"16\" class=\"".$class_image."\"  /></div>";
 					}
 						//Anything to display for this day?
-					if (isset($d[$cday][$cmonth][$cyear]["id"][0]))
+					elseif (isset($d[$cday][$cmonth][$cyear]["id"][0]))
 					{
 						$n = count($d[$cday][$cmonth][$cyear]["id"]);
 							//Show the start/stop times, 2 per line, linked to view_entry.
@@ -441,7 +433,7 @@ while ($month_indice < $month_end)
 								if ($d[$cday][$cmonth][$cyear]["room"][$i] == $row[0])
 								{
 										//if ($i > 0 && $i % 2 == 0) echo "<br />"; else echo " ";
-									echo "\n<br />\n<table width=\"100%\" border=\"0\" ><tr>\n";
+									echo "\n<table width=\"100%\" border=\"0\" ><tr>\n";
 									tdcell($d[$cday][$cmonth][$cyear]["color"][$i]);
 									if ($d[$cday][$cmonth][$cyear]["res"][$i] != '-')
 										echo " <img src=\"img_grr/buzy.png\" alt=\"".get_vocab("ressource actuellement empruntee")."\" title=\"".get_vocab("ressource actuellement empruntee")."\" width=\"20\" height=\"20\" class=\"image\" /> \n";

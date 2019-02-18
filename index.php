@@ -2,15 +2,11 @@
 /**
  * index.php
  * Ce script fait partie de l'application GRR
- * Dernière modification : $Date: 2010-04-07 15:38:14 $
- * @author    Laurent Delineau <laurent.delineau@ac-poitiers.fr>
- * @author    Marc-Henri PAMISEUX <marcori@users.sourceforge.net>
- * @copyright Copyright 2003-2008 Laurent Delineau
- * @copyright Copyright 2008 Marc-Henri PAMISEUX
+ * Ce script fait partie de l'application GRR
+ * Dernière modification : $Date: 2018-07-14 15:30$
+ * @author    Laurent Delineau & JeromeB & Yan Naessens
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
  * @link      http://www.gnu.org/licenses/licenses.html
- * @package   admin
- * @version   $Id: index.php,v 1.10 2010-04-07 15:38:14 grr Exp $
- * @filesource
  *
  * This file is part of GRR.
  *
@@ -18,28 +14,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
- * GRR is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with GRR; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-//~ if (!@file_exists("/var/www/lcs/includes/headerauth.inc.php"))
-	//~ error_reporting (E_ALL);
-//~ require_once("include/config.inc.php");
-//~ if (file_exists("include/connect.inc.php"))
-	//~ include "include/connect.inc.php";
-//~ require_once("include/misc.inc.php");
-//~ require_once("include/functions.inc.php");
-//~ require_once("include/settings.class.php");
-//~ // Paramètres langage
-//~ include "include/language.inc.php";
-
 if (!@file_exists("/var/www/lcs/includes/headerauth.inc.php"))
 	error_reporting (E_ALL);
 require_once("include/config.inc.php");
@@ -50,7 +25,6 @@ require_once("include/functions.inc.php");
 require_once("include/settings.class.php");
 // Paramètres langage
 include "include/language.inc.php";
-
 // Dans le cas d'une base mysql, on teste la bonne installation de la base et on propose une installation automatisée.
 if ($dbsys == "mysql")
 {
@@ -60,7 +34,7 @@ if ($dbsys == "mysql")
 	if (file_exists("include/connect.inc.php"))
 	{
 		require_once("include/connect.inc.php");
-		$db = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbPort");
+		$db = @mysqli_connect("$dbHost", "$dbUser", "$dbPass", "$dbDb", "$dbPort");
 		if ($db)
 		{
 			if (mysqli_select_db($db, "$dbDb"))
@@ -105,21 +79,18 @@ if ($dbsys == "mysql")
 		echo "<h1 class=\"center\">Gestion et Réservation de Ressources</h1>\n";
 		echo "<div style=\"text-align:center;\"><span style=\"color:red;font-weight:bold\">".$msg."</span>\n";
 		echo "<ul><li>Soit vous procédez à une mise à jour vers une nouvelle version de GRR. Dans ce cas, vous devez procéder à une mise à jour de la base de données MySql.<br />";
-		//Liaison entre index.php et admin_maj.php
-		echo "<b><a href=' admin/admin_maj.php'>Mettre à jour la base Mysql</a></b><br /></li>";
+		echo "<b><a href='./admin/admin_maj.php'>Mettre à jour la base Mysql</a></b><br /></li>";
 		echo "<li>Soit l'installation de GRR n'est peut-être pas terminée. Vous pouvez procéder à une installation/réinstallation de la base.<br />";
-		echo "<a href='install_mysql.php'>Installer la base $dbsys</a></li></ul></div>";
-		?>
-	</body>
-	</html>
-	<?php
-	die();
-}
+		echo "<a href='./installation/install_mysql.php'>Installer la base $dbsys</a></li></ul></div>";
+		echo "</body>";
+        echo "</html>";
+        die();
+    }
 }
 require_once("include/$dbsys.inc.php");
-require_once("include/session.inc.php");
+require_once("./include/session.inc.php");
 //Settings
-require_once("include/settings.class.php");
+require_once("./include/settings.class.php");
 //Chargement des valeurs de la table settingS
 if (!Settings::load())
 	die("Erreur chargement settings");
@@ -127,7 +98,7 @@ $cook = session_get_cookie_params();
 // Cas d'une authentification CAS
 if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statut') == 'cas_utilisateur'))
 {
-	require_once("include/cas.inc.php");
+	require_once("./include/cas.inc.php");
 	// A ce stade, l'utilisateur est authentifié par CAS
 	$password = '';
 	$user_ext_authentifie = 'cas';
@@ -186,8 +157,8 @@ if ((Settings::get('sso_statut') == 'cas_visiteur') || (Settings::get('sso_statu
 	}
 	if (grr_resumeSession())
 		header("Location: ".htmlspecialchars_decode(page_accueil())."");
-// Cas d'une authentification Lemonldap
 }
+// Cas d'une authentification Lemonldap
 else if ((Settings::get('sso_statut') == 'lemon_visiteur') || (Settings::get('sso_statut') == 'lemon_utilisateur'))
 {
 	if (isset($_GET['login']))
@@ -238,8 +209,8 @@ else if ((Settings::get('sso_statut') == 'lemon_visiteur') || (Settings::get('ss
 	}
 	if (grr_resumeSession())
 		header("Location: ".htmlspecialchars_decode(page_accueil())."");
-// Cas d'une authentification LCS
 }
+// Cas d'une authentification LCS
 else if (Settings::get('sso_statut') == 'lcs')
 {
 	include LCS_PAGE_AUTH_INC_PHP;
@@ -257,10 +228,10 @@ else if (Settings::get('sso_statut') == 'lcs')
 		// A ce stade, l'utilisateur est authentifié par LCS
 		// Etablir à nouveau la connexion à la base
 		if (empty($db_nopersist))
-			$db_c = mysql_pconnect($dbHost, $dbUser, $dbPass);
+			$db_c = mysqli_connect("p:".$dbHost, $dbUser, $dbPass, $dbDb);
 		else
-			$db_c = mysql_connect($dbHost, $dbUser, $dbPass);
-		if (!$db_c || !mysql_select_db ($dbDb))
+			$db_c = mysqli_connect($dbHost, $dbUser, $dbPass, $dbDb);
+		if (!$db_c || !mysqli_select_db ($db_c, $dbDb))
 		{
 			echo "\n<p>\n" . get_vocab('failed_connect_db') . "\n";
 			exit;
@@ -373,7 +344,7 @@ if ((Settings::get('sso_statut') == 'lasso_visiteur') || (Settings::get('sso_sta
 		// Get infos from the Identity Provider
 		$user_infos = array();
 		// Nom Prénom
-		list($tab_login['nom'], $tab_login['fullname']) = split(' ', $attributes['cn'][0]);
+		list($tab_login['nom'], $tab_login['fullname']) = preg_split(' ', $attributes['cn'][0]);
 		$tab_login['email'] = $attributes['mail'][0];
 		// Pour l'instant on ne redéfinit pas le login
 		//$tab_login['???'] = $attributes['username'][0];
@@ -419,8 +390,8 @@ if ((Settings::get('sso_statut') == 'lasso_visiteur') || (Settings::get('sso_sta
 	}
 	if (grr_resumeSession())
 		header("Location: ".htmlspecialchars_decode(page_accueil())."");
-	// Cas d'une authentification apache
 }
+// Cas d'une authentification apache
 else if ((Settings::get('sso_statut') == 'http_visiteur') || (Settings::get('sso_statut') == 'http_utilisateur'))
 {
 	// Nous utilisons les fonction d'authentification par PHP (plutôt que par Apache) à l'aide des lignes :
