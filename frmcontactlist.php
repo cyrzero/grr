@@ -15,14 +15,12 @@
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  */
-
 include "include/connect.inc.php";
 include "include/mysql.inc.php";
 include "include/misc.inc.php";
 include "include/functions.inc.php";
-
 $id = $_GET['id'];
-echo "<optgroup label=\"Salles\">";
+
 $res = grr_sql_query("SELECT room_name,id FROM ".TABLE_PREFIX."_room WHERE area_id = '".$id."' ORDER BY room_name");
 $nbresult = mysqli_num_rows($res);
 $user_name = getUserName();

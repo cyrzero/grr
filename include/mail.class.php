@@ -31,6 +31,17 @@ class Email{
 			$mail->CharSet = 'UTF-8';
 
 			$mail->SMTPDebug = 0;
+			$mail->Debugoutput = 'html';
+			
+			if (Settings::get('options_smtp') == '1') {
+				$mail->SMTPOptions = array(
+					'ssl' => array(
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true
+					)
+				);
+			}
 
 			$mail->isSMTP();
 			//$mail->SMTPOptions = array( 'ssl' => array( 'verify_peer' => false, 'verify_peer_name' => false, 'allow_self_signed' => true ) );

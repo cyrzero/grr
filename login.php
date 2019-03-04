@@ -106,6 +106,11 @@ if (isset($_POST['login']) && isset($_POST['password']))
 	}
 	else // la session est ouverte
 	{
+		?>
+		<script type="text/javascript" language="JavaScript">
+		document.location.replace("index.php")
+		</script>
+		<?php
         // si c'est un administrateur qui se connecte, on efface les données anciennes du journal
         nettoieLogConnexion($nbMaxJoursLogConnexion);
 		if (isset($_POST['url']))

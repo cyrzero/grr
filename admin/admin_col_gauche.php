@@ -115,7 +115,9 @@ echo "<table class=\"table_adm4\">";
 					$liste[] = 'admin_corresp_statut.php';
 			}
 			affichetableau($liste,get_vocab("admin_menu_various"));
-
+			
+			$ldap_restrictions = '';
+			$imap_restrictions = '';
 			$liste = array();
 			if ( (authGetUserLevel(getUserName(), -1, 'area') >= 6) && ((!isset($sso_restrictions)) || ($ldap_restrictions == false)) )
 				$liste[] = 'admin_config_ldap.php';

@@ -1,8 +1,20 @@
-<link rel="stylesheet" type="text/css" href="themes/default/css/clockpicker.css">
-
-<script type="text/javascript" src="js/clockpicker.js"></script>
-
 <?php
+/**
+ * frmcontactlist.php
+ * calcule la liste des ressources visibles dans un domaine
+ * Ce script fait partie de l'application GRR
+ * Dernière modification : $Date: 2018-03-26 10:00$
+ * @copyright Copyright 2003-2018 Team DEVOME - JeromeB
+ * @link      http://www.gnu.org/licenses/licenses.html
+ *
+ * This file is part of GRR.
+ *
+ * GRR is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ */
+ 
 include "include/connect.inc.php";
 include "include/config.inc.php";
 include "include/misc.inc.php";
@@ -17,7 +29,10 @@ if (!Settings::load())
 require_once("./include/session.inc.php");
 include "include/resume_session.php";
 include "include/language.inc.php";
-
+?>
+<link rel="stylesheet" type="text/css" href="themes/default/css/clockpicker.css">
+<script type="text/javascript" src="js/clockpicker.js"></script>
+<?php
 $id = $_GET['id'];
 
 $res = grr_sql_query("SELECT type_affichage_reser FROM ".TABLE_PREFIX."_room WHERE id = '".$id."'");
@@ -35,10 +50,6 @@ if ($nbresult != 0) {
 		$tar =  $row_roomName[0];
 	}
 }
-else {
-	echo " <option value =\"1\">Aucune ressource liée à ce domaine</option>";
-}	
-
 			
 if ($tar == "0") {	
 

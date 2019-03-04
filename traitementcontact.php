@@ -32,7 +32,6 @@ remplis :<br/><br/>";
 $msg_ok = "Votre demande a bien été prise en compte.";
 $message = $msg_erreur;
 
-
 //~ 
 if (empty($_POST['nom']))
 	$message .= "Votre nom";
@@ -43,17 +42,13 @@ if (empty($_POST['email']))
 if (empty($_POST['subject']))
 	$message .= "Le sujet de votre demande<br/>";
 if (empty($_POST['area']))
-	$message .= "Le domaine n'est pas rempli<br/>";
+	$message .= "Le domaine n\'est pas rempli<br/>";
 if (empty($_POST['room']))
 	$message .= "Aucune salle de choisie<br/>";
-if (empty($_POST['jours']))
-	$message .= "Aucune jours choisi <br/>";
-if (empty($_POST['mois']))
-	$message .= "Aucune mois choisi <br/>";
-if (empty($_POST['année']))
-	$message .= "Aucune année choisie <br/>";
-if (empty($_POST['duree']))
-	$message .= "Aucune durée choisie <br/>";
+if (empty($_POST['date']))
+	$message .= "Aucune date n\'est selectionnée<br/>";
+if (empty($_POST['time']))
+	$message .= "Vous n'avez pas renseigner d'heure de début de réservation";
 foreach ($_POST as $index => $valeur)
 	$index = stripslashes(trim($valeur));
 
@@ -77,11 +72,16 @@ $id = $_POST['area'] ;
 $sql_areaName = "SELECT area_name FROM ".TABLE_PREFIX."_area where id = \"$id\" ";
 $res_areaName = grr_sql_query1($sql_areaName);
 $mail_corps  .= "Domaines : ".$res_areaName. "<br/> ";
-$mail_corps  .= "Salle : ".$_POST['room']. "<br/><br/>";
-$mail_corps  .= "Date  :".$_POST['start_day']."/".$_POST['start_month']."/".$_POST['start_year']. " <br/>";
-$mail_corps  .= "Heure réservation  : ".$_POST['heure']. "h  ".$_POST['minutes']. "min<br/>";
-$mail_corps  .= "Durée de la réservation : ".$_POST['duree']. " \n";
-$mail_corps  .= " h ".$_POST['dureemin']. " \n</body></html>";
+$mail_corps  .= "Salle :<b> ".$_POST['room']. "</b><br/><br/>";
+
+$mail_corps  .= "Date de début de réservation  :".$_POST['date']. " <br/>";
+$mail_corps  .= "Heure réservation de début : ".$_POST['time']. " <br/>";
+
+if(isset($_POST['duree']) && $_POST['duree']!=''){
+$mail_corps  .= "Pour une durée de : ".$_POST['duree']. " " .$_POST['selection'] . " <br/>";
+} else {
+$mail_corps  .= "Date de fin de réservation  :".$_POST['datefin']. " <br/>";
+$mail_corps  .= "Heure réservation de fin : ".$_POST['timefin']. " <br/>";}
 
 $sujet ="Réservation d'une salle";
 $destinataire = Settings::get("mail_destinataire");
@@ -89,8 +89,7 @@ $destinataire = Settings::get("mail_destinataire");
 require_once 'phpmailer/PHPMailerAutoload.php';
 require_once 'include/mail.class.php';
 
-Email::Envois($destinataire, $sujet, $mail_corps, $_POST['email'], '', '');
-
+Email::Envois($destinataire, $sujet, $mail_corps, $_POST['email']);
 
 header('Location: week_all.php');
 
